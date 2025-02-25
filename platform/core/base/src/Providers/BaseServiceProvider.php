@@ -89,7 +89,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->prepareAliasesIfMissing();
 
-        config()->set(['session.cookie' => Str::slug(config('core.base.general.session_cookie', 'botble_session'))]);
+        config()->set(['session.cookie' => Str::slug(config('core.base.general.session_cookie', 'botble_session'), '_')]);
 
         $this->overrideDefaultConfigs();
 
@@ -262,6 +262,18 @@ class BaseServiceProvider extends ServiceProvider
             'debugbar.capture_ajax' => false,
             'debugbar.remote_sites_path' => '',
             'core.base.general.google_fonts' => GoogleFonts::getFonts(),
+            'scribe.type' => 'static',
+            'scribe.assets_directory' => 'vendor/core/packages/api',
+            'scribe.routes' => [
+                [
+                    'match' => [
+                        'prefixes' => ['api/*'],
+                        'domains' => ['*'],
+                    ],
+                    'include' => [],
+                    'exclude' => [],
+                ],
+            ],
         ]);
 
         if (
@@ -336,6 +348,7 @@ class BaseServiceProvider extends ServiceProvider
             'excel.exports.csv.use_bom' => true,
             'dompdf.public_path' => public_path(),
             'database.connections.mysql.strict' => Arr::get($baseConfig, 'db_strict_mode'),
+            'database.connections.mysql.prefix' => Arr::get($baseConfig, 'db_prefix'),
             'excel.imports.ignore_empty' => true,
             'excel.imports.csv.input_encoding' => Arr::get($baseConfig, 'csv_import_input_encoding', 'UTF-8'),
         ]);

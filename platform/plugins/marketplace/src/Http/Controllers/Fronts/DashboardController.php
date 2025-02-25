@@ -122,8 +122,7 @@ class DashboardController extends BaseController
                 'store_id' => $store->id,
             ])
             ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->orderByDesc('created_at')
+            ->whereDate('created_at', '<=', $endDate)->latest()
             ->limit(10)
             ->get();
 

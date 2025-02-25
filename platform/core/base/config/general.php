@@ -308,7 +308,7 @@ return [
     'purifier' => [
         'default' => [
             'HTML.Doctype' => 'HTML 4.01 Transitional',
-            'HTML.Allowed' => 'div,b,strong,i,em,u,a[href|title|rel|style|target|dofollow|nofollow],ul,ol,li,p[style],br,span[style],img[width|height|alt|src|style|loading],button,ins[style|data-ad-client|data-ad-slot|data-ad-format|data-full-width-responsive],video[src|type|width|height|preload|controls|autoplay|autostart|poster|id|class,muted],meta[name|content|property],link[media|type|rel|href]',
+            'HTML.Allowed' => 'div,b,strong,i,em,u,a[href|title|rel|style|target|dofollow|nofollow],ul,ol,li,p[style],br,span[style],img[width|height|alt|src|style|loading],button,ins[style|data-ad-client|data-ad-slot|data-ad-format|data-full-width-responsive],video[src|type|width|height|preload|controls|autoplay|autostart|poster|id|class,muted,loop],meta[name|content|property],link[media|type|rel|href]',
             'HTML.AllowedElements' => [
                 'a',
                 'b',
@@ -433,6 +433,8 @@ return [
             ['img', 'data-src', 'Text'],
             ['img', 'loading', 'Text'],
             ['video', 'autoplay', 'Bool'],
+            ['video', 'muted', 'Bool'],
+            ['video', 'loop', 'Bool'],
             ['meta', 'name', 'Text'],
             ['meta', 'content', 'Text'],
             ['meta', 'property', 'Text'],
@@ -443,6 +445,7 @@ return [
             ['link', 'color', 'Text'],
             ['audio', 'controls', 'Bool'],
             ['div', 'data-bs-theme', 'Text'],
+            ['div', 'data-url', 'Text'],
             ['button', 'data-bb-toggle', 'Text'],
             ['button', 'data-value', 'Text'],
         ],
@@ -453,6 +456,7 @@ return [
     'disable_verify_csrf_token' => env('CMS_DISABLE_VERIFY_CSRF_TOKEN', false),
     'enable_less_secure_web' => env('CMS_ENABLE_LESS_SECURE_WEB', false),
     'db_strict_mode' => env('DB_STRICT', true),
+    'db_prefix' => env('DB_PREFIX', ''),
     'enable_ini_set' => env('CMS_ENABLE_INI_SET', true),
     'upgrade_php_require_disabled' => env('CMS_UPGRADE_PHP_REQUIRE_DISABLED', false),
     'enabled_cleanup_database' => env('CMS_ENABLED_CLEANUP_DATABASE', false),

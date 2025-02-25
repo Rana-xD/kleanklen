@@ -11,7 +11,7 @@ return [
 
     'events' => [
         'beforeRenderTheme' => function (Theme $theme): void {
-            $version = get_cms_version();
+            $version = get_cms_version() . '.3';
 
             if (BaseHelper::isRtlEnabled()) {
                 $theme->asset()->usePath()->add('bootstrap', 'plugins/bootstrap/bootstrap.rtl.min.css');

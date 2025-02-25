@@ -14,16 +14,6 @@ use Botble\Table\Abstracts\TableAbstract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-/**
- * Class SpecificationTableController
- *
- * @package Botble\Ecommerce\Http\Controllers
- *
- * Controller for managing product specification tables in the e-commerce system.
- * Handles CRUD operations for product specifications including technical details,
- * features, and other tabular product information.
- */
-
 class SpecificationTableController extends BaseController
 {
     public function index(Request $request)

@@ -25,7 +25,8 @@ class CheckoutSettingForm extends SettingForm
     {
         parent::setup();
 
-        Assets::addScriptsDirectly('vendor/core/plugins/ecommerce/js/setting.js');
+        Assets::addScriptsDirectly('vendor/core/plugins/ecommerce/js/setting.js')
+            ->addScripts(['input-mask']);
 
         $countries = Helper::countries();
         $selectedCountries = array_keys(EcommerceHelper::getAvailableCountries());
@@ -42,12 +43,13 @@ class CheckoutSettingForm extends SettingForm
                     ->helperText(trans('plugins/ecommerce::setting.checkout.form.enable_guest_checkout_helper'))
                     ->value(EcommerceHelper::isEnabledGuestCheckout())
             )
-            ->add('minimum_order_amount', 'number', [
+            ->add('minimum_order_amount', 'text', [
                 'label' => trans('plugins/ecommerce::setting.checkout.form.minimum_order_amount', ['currency' => get_application_currency()->title]),
                 'value' => get_ecommerce_setting('minimum_order_amount', 0),
                 'attr' => [
                     'data-thousands-separator' => EcommerceHelper::getThousandSeparatorForInputMask(),
                     'data-decimal-separator' => EcommerceHelper::getDecimalSeparatorForInputMask(),
+                    'class' => 'form-control input-mask-number',
                     'group-flat' => true,
                 ],
             ])

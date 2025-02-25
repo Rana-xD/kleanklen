@@ -108,8 +108,8 @@ class Shippo
         $this->defaultTariff = '';
         $this->origin = $this->mergeAddress(EcommerceHelper::getOriginAddress());
 
-        $this->distanceUnit = ecommerce_width_height_unit();
-        $this->massUnit = ecommerce_weight_unit();
+        $this->distanceUnit = 'cm';
+        $this->massUnit = 'g';
 
         $this->packageTypes = config('plugins.shippo.general.package_types', []);
         $this->serviceLevels = config('plugins.shippo.general.service_levels', []);
@@ -453,8 +453,16 @@ class Shippo
             $width += $item['wide'] * $item['qty'];
         }
 
+        $width = ecommerce_convert_width_height($width);
+        $length = ecommerce_convert_width_height($length);
+        $height = ecommerce_convert_width_height($height);
+
+        $weight = round(EcommerceHelper::validateOrderWeight(Arr::get($inParams, 'weight', 0)), 2);
+
+        $weight = ecommerce_convert_weight($weight);
+
         $parcel = [
-            'weight' => round(EcommerceHelper::validateOrderWeight(Arr::get($inParams, 'weight', 0)), 2) ?: 200,
+            'weight' => $weight ?: 200,
             'length' => round($length, 2) ?: 10,
             'width' => round($width, 2) ?: 10,
             'height' => round($height, 2) ?: 10,

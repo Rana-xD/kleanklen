@@ -13,17 +13,6 @@ use Botble\Ecommerce\Models\ProductCollection;
 use Botble\Ecommerce\Tables\ProductCollectionTable;
 use Illuminate\Http\Request;
 
-/**
- * Class ProductCollectionController
- *
- * @package Botble\Ecommerce\Http\Controllers
- *
- * Controller for managing product collections in the e-commerce system.
- * Handles CRUD operations for grouping products into collections like
- * "New Arrivals", "Featured Products", "Sale Items" etc.
- * Manages collection creation, editing, listing and deletion.
- */
-
 class ProductCollectionController extends BaseController
 {
     protected function breadcrumb(): Breadcrumb

@@ -76,7 +76,7 @@ class PublicCartController extends BaseController
                 ->setMessage(__('This product is out of stock or not exists!'));
         }
 
-        if ($product->variations->count() > 0 && ! $product->is_variation) {
+        if ($product->variations->count() > 0 && ! $product->is_variation && $product->defaultVariation->product->id) {
             $product = $product->defaultVariation->product;
         }
 

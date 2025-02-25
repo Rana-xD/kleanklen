@@ -495,7 +495,7 @@
         },
         {
             "name": "botble/get-started",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/get-started",
@@ -521,7 +521,7 @@
         },
         {
             "name": "botble/installer",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/installer",
@@ -550,7 +550,7 @@
         },
         {
             "name": "botble/menu",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/menu",
@@ -583,7 +583,7 @@
         },
         {
             "name": "botble/optimize",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/optimize",
@@ -615,7 +615,7 @@
         },
         {
             "name": "botble/page",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/page",
@@ -645,7 +645,7 @@
         },
         {
             "name": "botble/platform",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/core",
@@ -751,7 +751,7 @@
         },
         {
             "name": "botble/plugin-management",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/plugin-management",
@@ -780,7 +780,7 @@
         },
         {
             "name": "botble/revision",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/revision",
@@ -809,7 +809,7 @@
         },
         {
             "name": "botble/seo-helper",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/seo-helper",
@@ -842,7 +842,7 @@
         },
         {
             "name": "botble/shortcode",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/shortcode",
@@ -874,7 +874,7 @@
         },
         {
             "name": "botble/sitemap",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/sitemap",
@@ -903,7 +903,7 @@
         },
         {
             "name": "botble/slug",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/slug",
@@ -935,7 +935,7 @@
         },
         {
             "name": "botble/theme",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/theme",
@@ -976,7 +976,7 @@
         },
         {
             "name": "botble/widget",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./platform/packages/widget",
@@ -4063,16 +4063,16 @@
         },
         {
             "name": "laravel/socialite",
-            "version": "v5.17.1",
+            "version": "v5.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/socialite.git",
-                "reference": "4b44c97c04da28e5aabb73df70b0999e9976382f"
+                "reference": "7809dc71250e074cd42970f0f803f2cddc04c5de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/4b44c97c04da28e5aabb73df70b0999e9976382f",
-                "reference": "4b44c97c04da28e5aabb73df70b0999e9976382f",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/7809dc71250e074cd42970f0f803f2cddc04c5de",
+                "reference": "7809dc71250e074cd42970f0f803f2cddc04c5de",
                 "shasum": ""
             },
             "require": {
@@ -4131,7 +4131,7 @@
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
-            "time": "2025-01-28T15:16:52+00:00"
+            "time": "2025-02-11T13:38:19+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -5294,21 +5294,21 @@
         },
         {
             "name": "mollie/laravel-mollie",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/laravel-mollie.git",
-                "reference": "767df6fd742bc379d65fde7207533c66064b6d3f"
+                "reference": "98a89dff9f27d1b41da36e048282516a99271662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/laravel-mollie/zipball/767df6fd742bc379d65fde7207533c66064b6d3f",
-                "reference": "767df6fd742bc379d65fde7207533c66064b6d3f",
+                "url": "https://api.github.com/repos/mollie/laravel-mollie/zipball/98a89dff9f27d1b41da36e048282516a99271662",
+                "reference": "98a89dff9f27d1b41da36e048282516a99271662",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "^10.0|^11.0",
+                "illuminate/support": "^10.0|^11.0|^12.0",
                 "mollie/mollie-api-php": "^2.60",
                 "php": "^8.1|^8.2"
             },
@@ -5316,8 +5316,8 @@
                 "laravel/pint": "^1.1",
                 "laravel/socialite": "^5.5",
                 "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^8.0|^9.0",
-                "phpunit/phpunit": "^10.0"
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^10.0|^11.5.3"
             },
             "suggest": {
                 "laravel/socialite": "Use Mollie Connect (OAuth) to authenticate via Laravel Socialite with the Mollie API. This is needed for some endpoints."
@@ -5340,7 +5340,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-2-Clause"
+                "MIT"
             ],
             "authors": [
                 {
@@ -5383,9 +5383,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/laravel-mollie/issues",
-                "source": "https://github.com/mollie/laravel-mollie/tree/v3.0.0"
+                "source": "https://github.com/mollie/laravel-mollie/tree/v3.1.0"
             },
-            "time": "2024-03-17T14:53:00+00:00"
+            "time": "2025-02-19T13:32:59+00:00"
         },
         {
             "name": "mollie/mollie-api-php",
@@ -8129,26 +8129,26 @@
         },
         {
             "name": "spatie/simple-excel",
-            "version": "3.7.1",
+            "version": "3.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/simple-excel.git",
-                "reference": "1dfc9c0cd60d8891905dc78946ae763a9f7dec2c"
+                "reference": "53546918bb480f7876c8ed295860408ded2e0ebf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/simple-excel/zipball/1dfc9c0cd60d8891905dc78946ae763a9f7dec2c",
-                "reference": "1dfc9c0cd60d8891905dc78946ae763a9f7dec2c",
+                "url": "https://api.github.com/repos/spatie/simple-excel/zipball/53546918bb480f7876c8ed295860408ded2e0ebf",
+                "reference": "53546918bb480f7876c8ed295860408ded2e0ebf",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^9.0|^10.0|^11.0",
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
                 "openspout/openspout": "^4.19",
                 "php": "^8.1"
             },
             "require-dev": {
-                "pestphp/pest-plugin-laravel": "^1.3|^2.3",
-                "phpunit/phpunit": "^9.4|^10.5",
+                "pestphp/pest-plugin-laravel": "^1.3|^2.3|^3.0",
+                "phpunit/phpunit": "^9.4|^10.5|^11.0|^12.0",
                 "spatie/pest-plugin-snapshots": "^1.1|^2.1",
                 "spatie/phpunit-snapshot-assertions": "^4.0|^5.1",
                 "spatie/temporary-directory": "^1.2|^2.2"
@@ -8178,7 +8178,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/simple-excel/tree/3.7.1"
+                "source": "https://github.com/spatie/simple-excel/tree/3.7.2"
             },
             "funding": [
                 {
@@ -8186,20 +8186,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-16T11:17:08+00:00"
+            "time": "2025-02-14T12:47:34+00:00"
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.5.0",
+            "version": "v16.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "3fb22256317344e049fce02ff289af3b776b0464"
+                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/3fb22256317344e049fce02ff289af3b776b0464",
-                "reference": "3fb22256317344e049fce02ff289af3b776b0464",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
+                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
                 "shasum": ""
             },
             "require": {
@@ -8243,9 +8243,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.5.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.6.0"
             },
-            "time": "2025-01-27T20:20:33+00:00"
+            "time": "2025-02-24T22:35:29+00:00"
         },
         {
             "name": "symfony/cache",
@@ -14976,6 +14976,6 @@
         "ext-pdo": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

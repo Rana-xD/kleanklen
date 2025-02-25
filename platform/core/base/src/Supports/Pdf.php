@@ -162,7 +162,7 @@ class Pdf
         return PdfFacade::setWarnings(false)
             ->setOption('chroot', [public_path(), base_path()])
             ->setOption('tempDir', storage_path('app'))
-            ->setOption('logOutputFile', storage_path('logs/pdf.log'))
+            ->setOption('logOutputFile', false)
             ->setOption('isRemoteEnabled', true)
             ->loadHTML($this->content, 'UTF-8')
             ->setPaper($this->paperSize ?? CPDF::$PAPER_SIZES['a4']);

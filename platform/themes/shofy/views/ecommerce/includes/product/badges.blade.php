@@ -4,7 +4,7 @@
     @else
         @if ($product->productLabels->isNotEmpty())
             @foreach ($product->productLabels as $label)
-                <span @style(["background-color: $label->color !important" => $label->color])>{{ $label->name }}</span>
+                <span {!! $label->css_styles !!}>{{ $label->name }}</span>
             @endforeach
         @else
             @if ($product->front_sale_price !== $product->price)

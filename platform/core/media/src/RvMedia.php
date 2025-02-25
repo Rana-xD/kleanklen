@@ -1002,7 +1002,7 @@ class RvMedia
 
     public function isChunkUploadEnabled(): bool
     {
-        return (int) $this->getConfig('chunk.enabled') == 1;
+        return (bool) setting('media_chunk_enabled', (int) $this->getConfig('chunk.enabled') == 1);
     }
 
     public function getConfig(?string $key = null, string|null|array $default = null)

@@ -64,7 +64,7 @@ class GetProductService
 
         $params = array_merge([
             'paginate' => [
-                'per_page' => $queryVar['num'],
+                'per_page' => $queryVar['num'] ?: 12,
                 'current_paged' => $request->integer('page', 1) ?: 1,
             ],
             'with' => array_merge(EcommerceHelper::withProductEagerLoadingRelations(), $with),
@@ -130,7 +130,7 @@ class GetProductService
             $params['condition'] = $conditions;
         }
 
-        $products = $this->productRepository->filterProducts([
+        return $this->productRepository->filterProducts([
             'keyword' => $queryVar['keyword'],
             'min_price' => $queryVar['min_price'],
             'max_price' => $queryVar['max_price'],
@@ -143,11 +143,5 @@ class GetProductService
             'attributes' => $queryVar['attributes'],
             'order_by' => $orderBy,
         ], $params);
-
-        if ($keyword = $queryVar['keyword']) {
-            $products->setCollection(BaseHelper::sortSearchResults($products->getCollection(), $keyword, 'name'));
-        }
-
-        return $products;
     }
 }

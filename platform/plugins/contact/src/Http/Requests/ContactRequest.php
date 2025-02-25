@@ -86,6 +86,9 @@ class ContactRequest extends Request
             'email' => __('Email'),
             'phone' => __('Phone'),
             'content' => __('Content'),
+            'subject' => __('Subject'),
+            'address' => __('Address'),
+            'agree_terms_and_policy' => __('Agree terms and policy'),
         ];
 
         $customFields = $this->getCustomFields();
@@ -95,6 +98,13 @@ class ContactRequest extends Request
         }
 
         return $attributes;
+    }
+
+    public function messages(): array
+    {
+        return [
+            'agree_terms_and_policy.accepted' => __('You must agree to the terms and policy.'),
+        ];
     }
 
     protected function getCustomFields(): Collection

@@ -566,6 +566,20 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
                         }
                     });
             }
+
+            $this->model = $this->model
+                ->orderByRaw('
+                            (CASE
+                                WHEN name LIKE ? THEN 4
+                                WHEN name LIKE ? THEN 3
+                                WHEN name LIKE ? THEN 2
+                                ELSE 1
+                            END) DESC
+                        ', [
+                    "{$keyword}",
+                    "%{$keyword}%",
+                    "%{$keyword}%",
+                ]);
         }
 
         // Filter product by min price and max price

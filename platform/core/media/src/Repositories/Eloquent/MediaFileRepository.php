@@ -202,6 +202,10 @@ class MediaFileRepository extends RepositoriesAbstract implements MediaFileInter
         }
 
         foreach ($params['order_by'] as $column => $direction) {
+            if (! in_array($direction, ['asc', 'desc'])) {
+                $direction = 'asc';
+            }
+
             $this->model = $this->model->orderBy($column, $direction);
         }
 

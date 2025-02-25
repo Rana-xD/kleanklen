@@ -41,7 +41,7 @@ if (is_plugin_active('faq')) {
                 ->wherePublished()
                 ->whereIn('id', $categoryIds)
                 ->with([
-                    'faqs' => function ($query) {
+                    'faqs' => function ($query): void {
                         $query->wherePublished();
                     },
                 ])

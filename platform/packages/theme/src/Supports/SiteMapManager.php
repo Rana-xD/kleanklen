@@ -112,7 +112,7 @@ class SiteMapManager
 
     public function allowedExtensions(): array
     {
-        $extensions = ['xml', 'html', 'txt', 'ror-rss', 'ror-rdf'];
+        $extensions = ['xml', 'xml-mobile', 'html', 'txt', 'ror-rss', 'ror-rdf', 'google-news'];
 
         $slugPostfix = SlugHelper::getPublicSingleEndingURL();
 

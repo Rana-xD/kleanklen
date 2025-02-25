@@ -290,7 +290,7 @@ class EcommerceHelper
             ->when(
                 $stateId,
                 fn ($query) => $query->where('state_id', $stateId),
-                function ($query) use ($countryId) {
+                function ($query) use ($countryId): void {
                     $query->when($countryId, function ($query) use ($countryId) {
                         return $query->whereHas('state.country', function ($query) use ($countryId) {
                             return $query
@@ -603,7 +603,7 @@ class EcommerceHelper
             })
             ->wherePublished()
             ->orderBy('order')
-            ->orderBy('name')
+            ->oldest('name')
             ->select('name', 'id')
             ->get()
             ->mapWithKeys(fn (State $item) => [$item->getKey() => $item->name]) // @phpstan-ignore-line
@@ -1727,5 +1727,19 @@ class EcommerceHelper
     public function isProductSpecificationEnabled(): bool
     {
         return (bool) get_ecommerce_setting('enable_product_specification', false);
+    }
+
+    public function hasAnyProductFilters(): bool
+    {
+        return $this->isEnabledFilterProductsByCategories() ||
+            $this->isEnabledFilterProductsByBrands() ||
+            $this->isEnabledFilterProductsByTags() ||
+            $this->isEnabledFilterProductsByAttributes() ||
+            $this->isEnabledFilterProductsByPrice();
+    }
+
+    public function getAssetVersion(): string
+    {
+        return '3.9.0';
     }
 }

@@ -221,7 +221,7 @@ final class Core
         return true;
     }
 
-    public function verifyLicense(bool $timeBasedCheck = false): bool
+    public function verifyLicense(bool $timeBasedCheck = false, int $timeoutInSeconds = 300): bool
     {
         LicenseVerifying::dispatch();
 
@@ -240,14 +240,14 @@ final class Core
             )->endOfDay();
             $now = Carbon::now()->addDays($this->verificationPeriod);
 
-            if ($now->greaterThan($lastCheckedDate) && $verified = $this->verifyLicenseDirectly()) {
+            if ($now->greaterThan($lastCheckedDate) && $verified = $this->verifyLicenseDirectly($timeoutInSeconds)) {
                 Session::put($cachesKey, $now->format($dateFormat));
             }
 
             return $verified;
         }
 
-        return $this->verifyLicenseDirectly();
+        return $this->verifyLicenseDirectly($timeoutInSeconds);
     }
 
     public function revokeLicense(string $license, string $client): bool
@@ -702,7 +702,7 @@ final class Core
         }
     }
 
-    private function createRequest(string $path, array $data = [], string $method = 'POST'): Response
+    private function createRequest(string $path, array $data = [], string $method = 'POST', int $timeoutInSeconds = 300): Response
     {
         if (! extension_loaded('curl')) {
             throw new MissingCURLExtensionException();
@@ -720,7 +720,7 @@ final class Core
                 ->acceptJson()
                 ->withoutVerifying()
                 ->connectTimeout(100)
-                ->timeout(300);
+                ->timeout($timeoutInSeconds);
 
             return match (Str::upper($method)) {
                 'GET' => $request->get($path, $data),
@@ -758,7 +758,7 @@ final class Core
         return Helper::getIpFromThirdParty();
     }
 
-    private function verifyLicenseDirectly(): bool
+    private function verifyLicenseDirectly(int $timeoutInSeconds = 300): bool
     {
         if (! $this->isLicenseFileExists()) {
             LicenseUnverified::dispatch();
@@ -772,7 +772,7 @@ final class Core
         ];
 
         try {
-            $response = $this->createRequest('verify_license', $data);
+            $response = $this->createRequest('verify_license', $data, $timeoutInSeconds);
         } catch (CouldNotConnectToLicenseServerException) {
             LicenseUnverified::dispatch();
 

@@ -59,14 +59,14 @@ class SocialLink
 
     public function getAttributes(array $attributes = []): HtmlString
     {
-        $backgroundColor = $this->getBackgroundColor();
+        $backgroundColor = $this->getBackgroundColor() ?: 'transparent';
         $color = $this->getColor();
 
         $attributes = [
             'href' => $this->getUrl(),
             'title' => $this->getName(),
             'target' => '_blank',
-            'style' => ($backgroundColor ? sprintf('background-color: %s !important;', $backgroundColor) : null) .
+            'style' => sprintf('background-color: %s !important;', $backgroundColor) .
                 ($color ? sprintf('color: %s !important;', $color) : null),
             ...$attributes,
         ];
@@ -95,6 +95,10 @@ class SocialLink
         }
 
         if (BaseHelper::hasIcon($this->icon)) {
+            $color = $this->getColor();
+
+            $attributes['style'] = ($color ? sprintf('color: %s !important;', $color) : null);
+
             $icon = BaseHelper::renderIcon($this->icon, attributes: $attributes);
         } else {
             $icon = BaseHelper::clean(sprintf('<i class="%s"></i>', $this->icon));

@@ -407,6 +407,10 @@
         padding-left: 30px;
         padding-right: 30px;
     }
+
+    @media (max-width: 768px) {
+        padding: 13px 20px 9px;
+    }
 }
 
 .#{$theme-prefix}-product-list-add-to-cart-btn {

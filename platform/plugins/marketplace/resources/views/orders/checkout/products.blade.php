@@ -9,8 +9,8 @@
             $store = $grouped['store'];
             if (! $store->exists) {
                 $store->id = 0;
-                $store->name = get_ecommerce_setting('company_name_for_invoicing', get_ecommerce_setting('store_name')) ?: \Botble\Theme\Facades\Theme::getSiteTitle();
-                $store->logo = theme_option('favicon') ?: \Botble\Theme\Facades\Theme::getLogo();
+                $store->name = get_ecommerce_setting('company_name_for_invoicing', get_ecommerce_setting('store_name')) ?: Theme::getSiteTitle();
+                $store->logo = theme_option('favicon') ?: Theme::getLogo();
             }
             $storeId = $store->id;
             $sessionData = Arr::get($sessionCheckoutData, 'marketplace.' . $storeId, []);

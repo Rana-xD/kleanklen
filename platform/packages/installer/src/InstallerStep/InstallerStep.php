@@ -3,6 +3,7 @@
 namespace Botble\Installer\InstallerStep;
 
 use Botble\Theme\Facades\Manager;
+use Botble\Theme\Facades\Theme;
 use Illuminate\Support\Facades\Route;
 
 class InstallerStep
@@ -11,6 +12,8 @@ class InstallerStep
      * @var array<InstallerStepItem>
      */
     protected static array $steps = [];
+
+    protected static array $themes = [];
 
     /**
      * @return array<InstallerStepItem>
@@ -44,7 +47,7 @@ class InstallerStep
                 ->priority(70),
         ];
 
-        if (class_exists(Manager::class) && count(Manager::getThemes()) > 1) {
+        if (InstallerStep::hasMoreThemes()) {
             self::$steps['theme'] = InstallerStepItem::make()
                 ->label(fn () => trans('packages/installer::installer.theme.title'))
                 ->route('installers.themes.index')
@@ -65,5 +68,32 @@ class InstallerStep
         }
 
         return 1;
+    }
+
+    public static function getThemes(): array
+    {
+        if (! class_exists(Manager::class)) {
+            return [];
+        }
+
+        if (self::$themes) {
+            return self::$themes;
+        }
+
+        $themes = collect(Manager::getThemes())->mapWithKeys(function ($theme, $key) {
+            return [$key => [
+                'label' => $theme['name'],
+                'image' => Theme::getThemeScreenshot($key),
+            ]];
+        })->all();
+
+        self::$themes = apply_filters('cms_installer_themes', $themes);
+
+        return self::$themes;
+    }
+
+    public static function hasMoreThemes(): bool
+    {
+        return count(self::getThemes()) > 1;
     }
 }

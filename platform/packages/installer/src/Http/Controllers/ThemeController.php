@@ -4,9 +4,8 @@ namespace Botble\Installer\Http\Controllers;
 
 use Botble\Base\Http\Controllers\BaseController;
 use Botble\Installer\Http\Requests\ChooseThemeRequest;
+use Botble\Installer\InstallerStep\InstallerStep;
 use Botble\Installer\Services\ImportDatabaseService;
-use Botble\Theme\Facades\Manager;
-use Botble\Theme\Facades\Theme;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -20,7 +19,7 @@ class ThemeController extends BaseController
     public function __construct()
     {
         $this->middleware(function (Request $request, Closure $next) {
-            abort_if(count(Manager::getThemes()) < 2, 404);
+            abort_if(! InstallerStep::hasMoreThemes(), 404);
 
             return $next($request);
         });
@@ -32,12 +31,7 @@ class ThemeController extends BaseController
             return redirect()->route('installers.requirements.index');
         }
 
-        $themes = collect(Manager::getThemes())->mapWithKeys(function ($theme, $key) {
-            return [$key => [
-                'label' => $theme['name'],
-                'image' => Theme::getThemeScreenshot($key),
-            ]];
-        })->all();
+        $themes = InstallerStep::getThemes();
 
         return view('packages/installer::theme', compact('themes'));
     }

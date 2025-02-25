@@ -4,7 +4,7 @@
 @endphp
 
 @if ($iconImage || $icon)
-    <span>
+    <span class="tp-product-category-icon">
         @if ($iconImage)
             {{ RvMedia::image($iconImage, $category->name, attributes: ['loading' => false, 'style' => 'width: 18px; height: 18px']) }}
         @elseif ($icon)

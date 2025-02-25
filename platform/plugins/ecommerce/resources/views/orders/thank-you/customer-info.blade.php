@@ -1,11 +1,11 @@
 @php
     $orders = $order;
 
-    if ($order instanceof \Illuminate\Support\Collection) {
-        $order = $order->where('is_finished', true)->first();
+    if ($orders instanceof \Illuminate\Support\Collection) {
+        $order = $orders->where('is_finished', true)->first();
 
         if (! $order) {
-            $order = $order->first();
+            $order = $orders->first();
         }
     }
 

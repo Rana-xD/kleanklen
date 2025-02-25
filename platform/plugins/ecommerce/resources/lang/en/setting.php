@@ -244,6 +244,8 @@ return [
             'enabled_phone_field_in_registration_form_helper' => 'When it is enabled, phone field will be added to the registration form.',
             'make_customer_phone_number_required' => 'Make customer phone number required',
             'make_customer_phone_number_required_helper' => 'When enabled, customers must enter their phone number during registration. It is always required for customers logging in with a phone number.',
+            'default_avatar' => 'Default avatar',
+            'default_avatar_helper' => 'Default avatar for customer when they do not have an avatar. If you do not select any image, it will be generated using your logo or the first character of customer name.',
         ],
     ],
     'shipping' => [

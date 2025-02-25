@@ -497,6 +497,7 @@ class Product extends BaseModel
             ->flashSales()
             ->wherePublished()
             ->notExpired()
+            ->wherePivot('quantity', '>', DB::raw('sold'))
             ->latest();
     }
 
@@ -534,7 +535,7 @@ class Product extends BaseModel
                 'ec_product_attribute_sets.slug as attribute_set_slug',
                 'ec_product_attribute_sets.order as attribute_set_order',
             ])
-            ->orderBy('attribute_set_order');
+            ->oldest('attribute_set_order');
     }
 
     protected function variationAttributes(): Attribute
@@ -744,8 +745,8 @@ class Product extends BaseModel
                     ->on('ec_products.id', '=', 'ec_product_variations.product_id')
                     ->where('ec_products.is_variation', 1);
             })
-            ->orderBy('name')
-            ->orderBy('parent_product_id');
+            ->oldest('name')
+            ->oldest('parent_product_id');
     }
 
     public static function getDigitalProductFilesDirectory(): string

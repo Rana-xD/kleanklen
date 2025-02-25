@@ -11,7 +11,7 @@
                         <div class="text-center tp-mobile-item">
                             <a href="{{ route('public.products') }}" class="tp-mobile-item-btn">
                                 <x-core::icon name="ti ti-shopping-bag" />
-                                <span>{{ __('Store') }}</span>
+                                <span class="text-truncate" title="{{ __('Store') }}">{{ __('Store') }}</span>
                             </a>
                         </div>
                     </div>
@@ -20,7 +20,7 @@
                     <div class="text-center tp-mobile-item">
                         <button class="tp-mobile-item-btn tp-search-open-btn">
                             <x-core::icon name="ti ti-search" />
-                            <span>{{ __('Search') }}</span>
+                            <span class="text-truncate" title="{{ __('Search') }}">{{ __('Search') }}</span>
                         </button>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <div class="text-center tp-mobile-item">
                                 <a href="{{ route('public.wishlist') }}" class="tp-mobile-item-btn">
                                     <x-core::icon name="ti ti-heart" />
-                                    <span>{{ __('Wishlist') }}</span>
+                                    <span class="text-truncate" title="{{ __('Wishlist') }}">{{ __('Wishlist') }}</span>
                                 </a>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                                 @endauth
                             >
                                 <x-core::icon name="ti ti-user" />
-                                <span>{{ __('Account') }}</span>
+                                <span class="text-truncate" title="{{ __('Account') }}">{{ __('Account') }}</span>
                             </a>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                     <div class="text-center tp-mobile-item">
                         <button class="tp-mobile-item-btn tp-offcanvas-open-btn">
                             <x-core::icon name="ti ti-menu-2" />
-                            <span>{{ __('Menu') }}</span>
+                            <span class="text-truncate" title="{{ __('Menu') }}">{{ __('Menu') }}</span>
                         </button>
                     </div>
                 </div>

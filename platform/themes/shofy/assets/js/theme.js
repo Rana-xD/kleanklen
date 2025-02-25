@@ -640,6 +640,9 @@ $(() => {
                 420: {
                     slidesPerView: 2,
                 },
+                375: {
+                    slidesPerView: 2,
+                },
                 0: {
                     slidesPerView: 1,
                 },
@@ -673,7 +676,10 @@ $(() => {
                     768: {
                         slidesPerView: 2,
                     },
-                    576: {
+                    420: {
+                        slidesPerView: 2,
+                    },
+                    375: {
                         slidesPerView: 2,
                     },
                     0: {
@@ -1210,6 +1216,9 @@ $(() => {
                         420: {
                             slidesPerView: 2,
                         },
+                        375: {
+                            slidesPerView: 2,
+                        },
                         0: {
                             slidesPerView: 1,
                         },
@@ -1372,12 +1381,12 @@ $(() => {
             })
 
             const activeNav = $('.menu-style-3 > nav > ul > li.active')
-            const activewidth = $(activeNav).width()
+            const activeWidth = $(activeNav).width()
             const activePadLeft = parseFloat($(activeNav).css('padding-left'))
             const activePadRight = parseFloat($(activeNav).css('padding-right'))
-            const totalWidth = activewidth + activePadLeft + activePadRight
+            const totalWidth = activeWidth + activePadLeft + activePadRight
 
-            const precedingAnchorWidth = anchorWidthCounter()
+            anchorWidthCounter()
 
             $(marker).css('display', 'block')
 
@@ -1434,9 +1443,38 @@ $(() => {
         const activePadRight = parseFloat($(activeNav).css('padding-right'))
         const totalWidth = activeWidth + activePadLeft + activePadRight
 
+        anchorWidthCounter()
+
         $(marker).css('display', 'block')
 
         $(marker).css('width', totalWidth)
+
+        function anchorWidthCounter() {
+            let anchorWidths = 0
+            let a
+            let aWidth
+            let aPadLeft
+            let aPadRight
+            let aTotalWidth
+            $('.tp-product-tab button').each(function (index, elem) {
+                const activeTest = $(elem).hasClass('active')
+                marker.style.left = elem.offsetLeft + 'px'
+                if (activeTest) {
+                    // Break out of the each function.
+                    return false
+                }
+
+                a = $(elem).find('button')
+                aWidth = a.width()
+                aPadLeft = parseFloat(a.css('padding-left'))
+                aPadRight = parseFloat(a.css('padding-right'))
+                aTotalWidth = aWidth + aPadLeft + aPadRight
+
+                anchorWidths = anchorWidths + aTotalWidth
+            })
+
+            return anchorWidths
+        }
     }
 
     if ($('#productTabMarker').length > 0) {

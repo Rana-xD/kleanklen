@@ -16,7 +16,7 @@
                     @endphp
 
                     <li @class(['has-dropdown' => $hasChildren])>
-                        <a href="{{ $category->url }}" title="{{ $category->name }}">
+                        <a href="{{ route('public.single', $category->url) }}" title="{{ $category->name }}">
                             {!! Theme::partial('header.categories-item', ['category' => $category]) !!}
                         </a>
 

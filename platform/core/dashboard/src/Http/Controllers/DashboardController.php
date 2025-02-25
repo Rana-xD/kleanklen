@@ -11,25 +11,8 @@ use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 
-/**
- * Controller for handling dashboard-related operations
- * 
- * This controller manages the admin dashboard including:
- * - Widget display and organization
- * - Widget settings and preferences
- * - Dashboard layout customization
- */
 class DashboardController extends BaseController
 {
-    /**
-     * Display the admin dashboard
-     * 
-     * Loads and displays dashboard widgets, statistics, and user-specific settings
-     * Handles widget organization and visibility based on user preferences
-     * 
-     * @param Request $request HTTP request instance
-     * @return \Illuminate\View\View Dashboard view with widgets
-     */
     public function getDashboard(Request $request)
     {
         $this->pageTitle(trans('core/dashboard::dashboard.title'));
@@ -79,12 +62,6 @@ class DashboardController extends BaseController
         return view('core/dashboard::list', compact('widgets', 'userWidgets', 'statWidgets'));
     }
 
-    /**
-     * Update settings for a specific dashboard widget
-     * 
-     * @param Request $request HTTP request with widget settings
-     * @return \Illuminate\Http\JsonResponse Response indicating success/failure
-     */
     public function postEditWidgetSettingItem(Request $request)
     {
         try {
@@ -119,12 +96,6 @@ class DashboardController extends BaseController
         return $this->httpResponse();
     }
 
-    /**
-     * Update the display order of dashboard widgets
-     * 
-     * @param Request $request HTTP request with widget order data
-     * @return \Illuminate\Http\JsonResponse Response with success message
-     */
     public function postUpdateWidgetOrder(Request $request)
     {
         foreach ($request->input('items', []) as $key => $item) {
@@ -146,12 +117,6 @@ class DashboardController extends BaseController
             ->setMessage(trans('core/dashboard::dashboard.update_position_success'));
     }
 
-    /**
-     * Hide a specific widget from the dashboard
-     * 
-     * @param Request $request HTTP request with widget name
-     * @return \Illuminate\Http\JsonResponse Response with success message
-     */
     public function getHideWidget(Request $request)
     {
         $widget = DashboardWidget::query()->where([
@@ -178,12 +143,6 @@ class DashboardController extends BaseController
             ->setMessage(trans('core/dashboard::dashboard.hide_success'));
     }
 
-    /**
-     * Bulk update visibility settings for multiple widgets
-     * 
-     * @param Request $request HTTP request with widget visibility data
-     * @return \Illuminate\Http\JsonResponse Response with success message
-     */
     public function postHideWidgets(Request $request)
     {
         $widgets = DashboardWidget::query()->get();

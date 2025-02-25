@@ -210,7 +210,7 @@ class ProductVariationTable extends TableAbstract
 
     public function getProductAttributeSets(): Collection
     {
-        if (! $this->productAttributeSets->count()) {
+        if ($this->productAttributeSets->isEmpty()) {
             $this->productAttributeSets = ProductAttributeSet::getAllWithSelected($this->productId, []);
         }
 

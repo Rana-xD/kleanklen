@@ -20,6 +20,7 @@ use InvalidArgumentException;
  * @property-read float $tax
  * @property-read float $taxTotal
  */
+#[\AllowDynamicProperties]
 class CartItem implements Arrayable, Jsonable
 {
     public string $rowId;
@@ -37,6 +38,10 @@ class CartItem implements Arrayable, Jsonable
     protected ?string $associatedModel = null;
 
     protected float $taxRate = 0;
+
+    public string|Carbon $updated_at;
+
+    public string|Carbon $created_at;
 
     public function __construct(int|string|null $id, ?string $name, float $price, array $options = [])
     {
@@ -133,6 +138,11 @@ class CartItem implements Arrayable, Jsonable
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->{$name} = $value;
     }
 
     public function __get($attribute)

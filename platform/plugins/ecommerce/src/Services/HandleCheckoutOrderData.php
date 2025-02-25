@@ -124,7 +124,7 @@ class HandleCheckoutOrderData
                     if ($optionRequest = $request->input('shipping_option', old('shipping_option'))) {
                         if (
                             (is_string($optionRequest) || is_int($optionRequest))
-                            && array_key_exists($optionRequest, Arr::get($shipping, $defaultShippingMethod))
+                            && array_key_exists($optionRequest, Arr::get($shipping, $defaultShippingMethod, []))
                         ) {
                             $defaultShippingOption = $optionRequest;
                         }

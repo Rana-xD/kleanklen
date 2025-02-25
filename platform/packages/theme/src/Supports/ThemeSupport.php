@@ -946,9 +946,10 @@ class ThemeSupport
             'M/d/Y',
             'd/m/Y',
             'd/M/Y',
+            'd.m.Y',
         ];
 
-        if ($extraDateFormat = config('packages.theme.extra_date_format')) {
+        if ($extraDateFormat = config('packages.theme.general.extra_date_format')) {
             $formats[] = $extraDateFormat;
         }
 

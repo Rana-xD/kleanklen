@@ -107,7 +107,7 @@ class PublicController extends BaseController
             event(new RenderingSiteMapEvent($key));
         }
 
-        // show your site map (options: 'xml' (default), 'html', 'txt', 'ror-rss', 'ror-rdf')
+        // show your site map (options: 'xml' (default), 'xml-mobile', 'html', 'txt', 'ror-rss', 'ror-rdf', 'google-news')
         return SiteMapManager::render($key ? $extension : 'sitemapindex');
     }
 

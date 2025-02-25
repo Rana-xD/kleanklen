@@ -739,12 +739,7 @@ textarea {
         height: 100%;
 
         &-btn {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
+            display: block;
         }
     }
 
@@ -2785,6 +2780,12 @@ header {
     }
 }
 
+@media (max-width: 767px) {
+    .single-product .back-to-top-btn-show {
+        bottom: 140px !important;
+    }
+}
+
 @media (max-width: 768px) {
     .tp-deal-countdown .tp-product-countdown-inner ul li {
         font-size: 14px;
@@ -2793,6 +2794,10 @@ header {
             font-size: 26px;
             margin-bottom: 5px;
         }
+    }
+
+    .tp-product-details-add-to-cart-btn {
+        padding: 8px 10px;
     }
 
     .pb-120 {
@@ -2890,4 +2895,40 @@ main .tp-sidebar-blog-title {
             animation: none;
         }
     }
+}
+
+.bb-shop-sidebar {
+    .tp-sidebar-search-input {
+        input {
+            height: 40px;
+        }
+
+        svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 1;
+        }
+
+        button {
+            inset-inline-end: 15px;
+        }
+    }
+}
+
+.tp-product-category-thumb, .tp-error-thumb {
+    img {
+        max-width: 100%;
+    }
+}
+
+.tp-header-top-black .tp-header-top-menu-item .tp-setting-list-open li a {
+    color: var(--tp-common-black);
+}
+
+.tp-footer-payment img {
+    max-height: 70px;
+}
+
+.tp-subscribe-shape img {
+    max-height: 200px;
 }

@@ -11,6 +11,7 @@
         {!!
             \Botble\Ecommerce\Forms\Fronts\Customer\AddressForm::create()
                 ->add('customer_id', 'hidden', ['value' => $form->getModel()->id])
+                ->remove('submit')
                 ->renderForm()
         !!}
 

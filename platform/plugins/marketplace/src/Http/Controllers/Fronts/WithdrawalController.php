@@ -17,21 +17,8 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-/**
- * Class WithdrawalController
- *
- * This controller handles vendor withdrawal requests in the marketplace.
- * It manages the creation, updating, and viewing of withdrawal requests,
- * including validation of withdrawal amounts and vendor balances.
- */
 class WithdrawalController extends BaseController
 {
-    /**
-     * Display a list of vendor withdrawal requests.
-     *
-     * @param VendorWithdrawalTable $table The withdrawal table instance
-     * @return mixed The rendered table view
-     */
     public function index(VendorWithdrawalTable $table)
     {
         $this->pageTitle(__('Withdrawals'));
@@ -39,12 +26,6 @@ class WithdrawalController extends BaseController
         return $table->renderTable();
     }
 
-    /**
-     * Show the form for creating a new withdrawal request.
-     * Validates vendor balance and bank information before allowing withdrawal.
-     *
-     * @return mixed The withdrawal form or error response
-     */
     public function create()
     {
         $user = auth('customer')->user();
@@ -63,13 +44,6 @@ class WithdrawalController extends BaseController
         return VendorWithdrawalForm::create()->renderForm();
     }
 
-    /**
-     * Store a new withdrawal request.
-     * Handles the creation of withdrawal records and updates vendor balance.
-     *
-     * @param VendorWithdrawalRequest $request The validated withdrawal request
-     * @return mixed Response indicating success or failure
-     */
     public function store(VendorWithdrawalRequest $request)
     {
         $fee = MarketplaceHelper::getSetting('fee_withdrawal', 0);
@@ -132,13 +106,6 @@ class WithdrawalController extends BaseController
             ->withCreatedSuccessMessage();
     }
 
-    /**
-     * Show the form for editing a withdrawal request.
-     * Only pending withdrawals can be edited.
-     *
-     * @param int|string $id The withdrawal request ID
-     * @return mixed The withdrawal edit form
-     */
     public function edit(int|string $id)
     {
         $withdrawal = Withdrawal::query()
@@ -156,14 +123,6 @@ class WithdrawalController extends BaseController
             ->renderForm();
     }
 
-    /**
-     * Update a withdrawal request.
-     * Allows updating description or canceling the withdrawal.
-     *
-     * @param int|string $id The withdrawal request ID
-     * @param VendorEditWithdrawalRequest $request The validated edit request
-     * @return mixed Response indicating success or failure
-     */
     public function update(int|string $id, VendorEditWithdrawalRequest $request)
     {
         $withdrawal = Withdrawal::query()
@@ -200,12 +159,6 @@ class WithdrawalController extends BaseController
             ->withUpdatedSuccessMessage();
     }
 
-    /**
-     * Display a specific withdrawal request.
-     *
-     * @param int|string $id The withdrawal request ID
-     * @return mixed The withdrawal details view
-     */
     public function show(int|string $id)
     {
         $withdrawal = Withdrawal::query()

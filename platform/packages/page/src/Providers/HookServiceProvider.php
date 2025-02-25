@@ -17,6 +17,7 @@ use Botble\Slug\Models\Slug;
 use Botble\Table\Columns\Column;
 use Botble\Table\Columns\NameColumn;
 use Botble\Theme\Events\RenderingThemeOptionSettings;
+use Botble\Theme\Facades\Theme;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Collection;
@@ -88,7 +89,7 @@ class HookServiceProvider extends ServiceProvider
                             'url' => $page->url,
                             'logo' => [
                                 '@type' => 'ImageObject',
-                                'url' => RvMedia::getImageUrl(theme_option('logo')),
+                                'url' => RvMedia::getImageUrl(Theme::getLogo()),
                             ],
                         ];
 

@@ -52,6 +52,21 @@ class ContactForm extends FormFront
     {
         $data = $this->getModel();
 
+        Theme::asset()
+            ->usePath(false)
+            ->add('contact-css', asset('vendor/core/plugins/contact/css/contact-public.css'), [], [], '1.0.1');
+
+        Theme::asset()
+            ->container('footer')
+            ->usePath(false)
+            ->add(
+                'contact-public-js',
+                asset('vendor/core/plugins/contact/js/contact-public.js'),
+                ['jquery'],
+                [],
+                '1.0.1'
+            );
+
         try {
             $displayFields = array_filter(explode(',', (string) Arr::get($data, 'display_fields'))) ?: ['phone', 'email', 'address', 'subject'];
         } catch (Throwable) {

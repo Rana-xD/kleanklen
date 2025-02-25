@@ -1,4 +1,4 @@
-<div @class(['bb-filter-offcanvas-area', 'd-lg-none' => products_listing_layout() === 'no-sidebar'])>
+<div @class(['bb-filter-offcanvas-area', 'd-lg-none bb-filter-offcanvas-area-on-desktop' => products_listing_layout() === 'no-sidebar'])>
     <div class="bb-filter-offcanvas-wrapper">
         <div class="bb-filter-offcanvas-close">
             <button type="button" class="bb-filter-offcanvas-close-btn" data-bb-toggle="toggle-filter-sidebar">

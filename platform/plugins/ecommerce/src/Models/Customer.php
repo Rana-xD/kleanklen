@@ -182,6 +182,10 @@ class Customer extends BaseModel implements
                 return RvMedia::getImageUrl($this->avatar, 'thumb');
             }
 
+            if ($defaultAvatar = get_ecommerce_setting('customer_default_avatar')) {
+                return RvMedia::getImageUrl($defaultAvatar);
+            }
+
             try {
                 return (new Avatar())->create(Str::ucfirst($this->name))->toBase64();
             } catch (Exception) {

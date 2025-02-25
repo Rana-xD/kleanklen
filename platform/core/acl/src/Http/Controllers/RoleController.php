@@ -15,21 +15,8 @@ use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Base\Supports\Breadcrumb;
 use Botble\Base\Supports\Helper;
 
-/**
- * Controller for managing user roles and permissions
- * 
- * This controller handles all role-related operations including:
- * - Creating and editing roles
- * - Assigning permissions to roles
- * - Managing role assignments to users
- * - Role duplication and deletion
- */
 class RoleController extends BaseSystemController
 {
-    /**
-     * Generate breadcrumb for role management pages
-     * @return Breadcrumb
-     */
     protected function breadcrumb(): Breadcrumb
     {
         return parent::breadcrumb()
@@ -39,12 +26,6 @@ class RoleController extends BaseSystemController
             );
     }
 
-    /**
-     * Display list of all roles
-     * 
-     * @param RoleTable $dataTable The role data table instance
-     * @return mixed Returns the rendered role table view
-     */
     public function index(RoleTable $dataTable)
     {
         $this->pageTitle(trans('core/acl::permissions.role_permission'));
@@ -52,11 +33,6 @@ class RoleController extends BaseSystemController
         return $dataTable->renderTable();
     }
 
-    /**
-     * Delete a role
-     * @param Role $role The role to delete
-     * @return BaseHttpResponse
-     */
     public function destroy(Role $role)
     {
         $role->delete();
@@ -68,12 +44,6 @@ class RoleController extends BaseSystemController
             ->setMessage(trans('core/acl::permissions.delete_success'));
     }
 
-    /**
-     * Show the form for editing a role
-     * 
-     * @param Role $role The role to edit
-     * @return mixed Returns the role edit form view
-     */
     public function edit(Role $role)
     {
         $this->pageTitle(trans('core/acl::permissions.details', ['name' => $role->name]));
@@ -81,13 +51,6 @@ class RoleController extends BaseSystemController
         return RoleForm::createFromModel($role)->renderForm();
     }
 
-    /**
-     * Update a role's details and permissions
-     * 
-     * @param Role $role The role to update
-     * @param RoleCreateRequest $request The validated role update request
-     * @return BaseHttpResponse
-     */
     public function update(Role $role, RoleCreateRequest $request)
     {
         if ($request->input('is_default')) {
@@ -112,12 +75,6 @@ class RoleController extends BaseSystemController
             ->setMessage(trans('core/acl::permissions.modified_success'));
     }
 
-    /**
-     * Clean and format permission array
-     * 
-     * @param array $permissions Raw permission array
-     * @return array Cleaned permission array with boolean values
-     */
     protected function cleanPermission(array $permissions): array
     {
         if (! $permissions) {
@@ -132,11 +89,6 @@ class RoleController extends BaseSystemController
         return $cleanedPermissions;
     }
 
-    /**
-     * Show form for creating a new role
-     * 
-     * @return mixed Returns the role creation form view
-     */
     public function create()
     {
         $this->pageTitle(trans('core/acl::permissions.create_role'));
@@ -144,12 +96,6 @@ class RoleController extends BaseSystemController
         return RoleForm::create()->renderForm();
     }
 
-    /**
-     * Store a newly created role
-     * 
-     * @param RoleCreateRequest $request The validated role creation request
-     * @return BaseHttpResponse
-     */
     public function store(RoleCreateRequest $request)
     {
         if ($request->input('is_default')) {
@@ -172,12 +118,6 @@ class RoleController extends BaseSystemController
             ->setMessage(trans('core/acl::permissions.create_success'));
     }
 
-    /**
-     * Duplicate an existing role
-     * 
-     * @param Role $role The role to duplicate
-     * @return BaseHttpResponse
-     */
     public function getDuplicate(Role $role)
     {
         $duplicatedRole = Role::query()->create([
@@ -195,11 +135,6 @@ class RoleController extends BaseSystemController
             ->setMessage(trans('core/acl::permissions.duplicated_success'));
     }
 
-    /**
-     * Get JSON representation of all roles
-     * 
-     * @return array Array of role data for JSON response
-     */
     public function getJson(): array
     {
         $pl = [];
@@ -213,12 +148,6 @@ class RoleController extends BaseSystemController
         return $pl;
     }
 
-    /**
-     * Assign a role to a user
-     * 
-     * @param AssignRoleRequest $request The role assignment request
-     * @return BaseHttpResponse
-     */
     public function postAssignMember(AssignRoleRequest $request): BaseHttpResponse
     {
         /**

@@ -27,7 +27,7 @@ $(() => {
             .then(({ data }) => {
                 $newsletterPopup.html(data.html);
 
-                if (typeof Theme.lazyLoadInstance !== 'undefined') {
+                if (typeof Theme !== 'undefined' && typeof Theme.lazyLoadInstance !== 'undefined') {
                     Theme.lazyLoadInstance.update()
                 }
 

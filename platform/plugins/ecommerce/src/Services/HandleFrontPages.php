@@ -159,11 +159,13 @@ class HandleFrontPages
                 );
 
                 if (! $product->is_variation && $productVariation) {
-                    $product = app(UpdateDefaultProductService::class)->updateColumns($product, $productVariation);
                     $selectedProductVariation = $productVariation->defaultVariation;
                     $selectedProductVariation->product_id = $productVariation->id;
-
                     $product->defaultVariation = $selectedProductVariation;
+
+                    if (! $product->defaultVariation->product->isOutOfStock()) {
+                        $product = app(UpdateDefaultProductService::class)->updateColumns($product, $productVariation);
+                    }
 
                     $product->image = $selectedProductVariation->configurableProduct->image ?: $product->image;
                 }

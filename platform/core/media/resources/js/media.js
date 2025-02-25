@@ -637,7 +637,7 @@ class MediaManagement {
                 )
             })
 
-        if (MediaConfig.request_params.view_in === 'trash') {
+        if (Helpers.getRequestParams().view_in === 'trash') {
             $(document).find('.js-insert-to-editor').prop('disabled', true)
         } else {
             $(document).find('.js-insert-to-editor').prop('disabled', false)

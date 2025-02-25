@@ -67,6 +67,9 @@ class MailConfigServiceProvider extends ServiceProvider
                         break;
                     case 'mailgun':
                         $config->set([
+                            'mail.mailgun' => [
+                                 'transport' => 'mailgun',
+                            ],
                             'services.mailgun' => [
                                 'domain' => $setting->get('email_mail_gun_domain'),
                                 'secret' => $setting->get('email_mail_gun_secret'),

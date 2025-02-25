@@ -79,6 +79,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string|null getLogo(string $logoKey = 'logo')
  * @method static string|null getFavicon()
  * @method static string|null getSiteTitle()
+ * @method static string|null termAndPrivacyPolicyUrl()
  * @method static \Illuminate\Support\HtmlString|null getLogoImage(array $attributes = [], string $logoKey = 'logo', int $maxHeight = 0, string|null $logoUrl = null)
  * @method static string|null formatDate(\Carbon\CarbonInterface|string|int|null $date, string|null $format = null)
  * @method static \Botble\Theme\Typography\Typography typography()

@@ -31,25 +31,10 @@ use League\Flysystem\UnableToWriteFile;
 use Throwable;
 
 /**
- * Media Controller handles all media-related operations in the application
- * 
- * This controller manages media files and folders including:
- * - File uploads and downloads
- * - Folder creation and management
- * - Media library browsing and organization
- * - Image processing and thumbnail generation
- * 
  * @since 19/08/2015 08:05 AM
  */
 class MediaController extends BaseController
 {
-    /**
-     * Constructor for MediaController
-     * 
-     * @param MediaFileInterface $fileRepository Repository for media file operations
-     * @param MediaFolderInterface $folderRepository Repository for media folder operations
-     * @param UploadsManager $uploadManager Manager for handling file uploads
-     */
     public function __construct(
         protected MediaFileInterface $fileRepository,
         protected MediaFolderInterface $folderRepository,
@@ -57,11 +42,6 @@ class MediaController extends BaseController
     ) {
     }
 
-    /**
-     * Display the main media management page
-     * 
-     * @return \Illuminate\View\View
-     */
     public function getMedia()
     {
         $this->pageTitle(trans('core/media::media.menu_name'));
@@ -69,28 +49,11 @@ class MediaController extends BaseController
         return view('core/media::index');
     }
 
-    /**
-     * Display media popup for selection
-     * 
-     * @return string Rendered popup view
-     */
     public function getPopup()
     {
         return view('core/media::popup')->render();
     }
 
-    /**
-     * Get list of media files and folders
-     * 
-     * Handles filtering, pagination, and organization of media items including:
-     * - All media view
-     * - Trash view
-     * - Recent items
-     * - Favorites
-     * 
-     * @param MediaListRequest $request Request with media listing parameters
-     * @return array Returns files, folders and breadcrumbs data
-     */
     public function getList(MediaListRequest $request)
     {
         $files = [];
@@ -272,12 +235,6 @@ class MediaController extends BaseController
         ]);
     }
 
-    /**
-     * Transform the order by parameter for sorting
-     * 
-     * @param string|null $orderBy The order by parameter
-     * @return array Returns the transformed order by array
-     */
     protected function transformOrderBy(?string $orderBy): array
     {
         $result = explode('-', $orderBy);
@@ -288,12 +245,6 @@ class MediaController extends BaseController
         return $result;
     }
 
-    /**
-     * Get breadcrumbs for the current folder
-     * 
-     * @param Request $request Request with folder details
-     * @return array Returns breadcrumbs data
-     */
     protected function getBreadcrumbs(Request $request): array
     {
         $folderId = $request->input('folder_id');
@@ -327,13 +278,6 @@ class MediaController extends BaseController
         return $breadcrumbs;
     }
 
-    /**
-     * Handle global actions for media items
-     * 
-     * @param Request $request Request with action details
-     * @param ThumbnailService $thumbnailService Service for handling image thumbnails
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function postGlobalActions(Request $request, ThumbnailService $thumbnailService)
     {
         $response = RvMedia::responseError(trans('core/media::media.invalid_action'));
@@ -714,13 +658,6 @@ class MediaController extends BaseController
         return $response;
     }
 
-    /**
-     * Copy a media file
-     * 
-     * @param MediaFile $file The file to copy
-     * @param int|string|null $newFolderId The ID of the new folder
-     * @return MediaFile The copied file
-     */
     protected function copyFile(MediaFile $file, int|string|null $newFolderId = null)
     {
         $file = $file->replicate();
@@ -767,12 +704,6 @@ class MediaController extends BaseController
         return $file;
     }
 
-    /**
-     * Download media files
-     * 
-     * @param Request $request Request with file download details
-     * @return \Illuminate\Http\Response
-     */
     public function download(Request $request)
     {
         $items = $request->input('selected', []);

@@ -19,22 +19,8 @@ use Botble\Theme\Facades\Theme;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
-/**
- * Class PrintShippingLabelController
- *
- * This controller is responsible for generating and printing shipping labels for orders.
- * It creates a PDF document containing shipping information, QR code for tracking,
- * and both sender and receiver details.
- */
 class PrintShippingLabelController extends BaseController
 {
-    /**
-     * Handle the generation and streaming of shipping label PDF.
-     *
-     * @param Shipment $shipment The shipment model instance containing shipping details
-     * @param Pdf $pdf The PDF generation service
-     * @return Response Returns a streamed PDF response
-     */
     public function __invoke(Shipment $shipment, Pdf $pdf): Response
     {
         $renderer = new ImageRenderer(
@@ -134,10 +120,10 @@ class PrintShippingLabelController extends BaseController
                     'full_address' => $fullAddress,
                 ],
                 'receiver' => [
-                    'name' => $order->user_name,
+                    'name' => $order->shippingAddress->name ?: $order->user->name,
                     'full_address' => $order->full_address,
-                    'email' => $order->user->email,
-                    'phone' => $order->user->phone,
+                    'email' => $order->shippingAddress->email ?: $order->user->email,
+                    'phone' => $order->shippingAddress->phone ?: $order->user->phone,
                     'note' => Str::limit((string) $order->description, 90),
                 ],
             ], $shipment))

@@ -28,11 +28,6 @@ use Throwable;
 
 class UserController extends BaseSystemController
 {
-    /**
-     * Generate the breadcrumb for user management pages
-     * 
-     * @return Breadcrumb
-     */
     protected function breadcrumb(): Breadcrumb
     {
         return parent::breadcrumb()
@@ -42,12 +37,6 @@ class UserController extends BaseSystemController
             );
     }
 
-    /**
-     * Display a listing of all users
-     * 
-     * @param UserTable $dataTable The user data table instance
-     * @return mixed Returns the rendered user table view
-     */
     public function index(UserTable $dataTable)
     {
         $this->pageTitle(trans('core/acl::users.users'));
@@ -55,11 +44,6 @@ class UserController extends BaseSystemController
         return $dataTable->renderTable();
     }
 
-    /**
-     * Show the form for creating a new user
-     * 
-     * @return mixed Returns the user creation form view
-     */
     public function create()
     {
         $this->pageTitle(trans('core/acl::users.create_new_user'));
@@ -67,13 +51,6 @@ class UserController extends BaseSystemController
         return UserForm::create()->renderForm();
     }
 
-    /**
-     * Store a newly created user in the database
-     * 
-     * @param CreateUserRequest $request The validated user creation request
-     * @param CreateUserService $service The user creation service
-     * @return mixed Returns response with success message and redirect
-     */
     public function store(CreateUserRequest $request, CreateUserService $service)
     {
         $form = UserForm::create();
@@ -92,13 +69,6 @@ class UserController extends BaseSystemController
             ->withCreatedSuccessMessage();
     }
 
-    /**
-     * Delete a user from the system
-     * 
-     * @param User $user The user model to be deleted
-     * @return mixed Returns delete action response
-     * @throws Exception When trying to delete logged in user or super user
-     */
     public function destroy(User $user)
     {
         return DeleteResourceAction::make($user)
@@ -116,13 +86,6 @@ class UserController extends BaseSystemController
             });
     }
 
-    /**
-     * Display user profile page with forms for profile, password and preferences
-     * 
-     * @param User $user The user whose profile to display
-     * @param Request $request The HTTP request instance
-     * @return \Illuminate\View\View Returns the profile view with forms
-     */
     public function getUserProfile(User $user, Request $request)
     {
         Assets::addScripts('cropper')
@@ -166,13 +129,6 @@ class UserController extends BaseSystemController
         );
     }
 
-    /**
-     * Update user profile information
-     * 
-     * @param User $user The user model to update
-     * @param UpdateProfileRequest $request The validated profile update request
-     * @return mixed Returns response with success/error message
-     */
     public function postUpdateProfile(User $user, UpdateProfileRequest $request)
     {
         if ($user->email !== $request->input('email')) {
@@ -216,14 +172,6 @@ class UserController extends BaseSystemController
             ->setMessage(trans('core/acl::users.update_profile_success'));
     }
 
-    /**
-     * Change user's password
-     * 
-     * @param User $user The user model
-     * @param UpdatePasswordRequest $request The validated password update request
-     * @param ChangePasswordService $service The password change service
-     * @return mixed Returns response with success/error message
-     */
     public function postChangePassword(User $user, UpdatePasswordRequest $request, ChangePasswordService $service)
     {
         $request->merge(['id' => $user->getKey()]);
@@ -245,13 +193,6 @@ class UserController extends BaseSystemController
             ->setMessage(trans('core/acl::users.password_update_success'));
     }
 
-    /**
-     * Update user preferences
-     * 
-     * @param User $user The user model
-     * @param PreferenceRequest $request The validated preference update request
-     * @return mixed Returns response with updated preferences
-     */
     public function updatePreferences(User $user, PreferenceRequest $request)
     {
         PreferenceForm::createFromModel($user)
@@ -270,13 +211,6 @@ class UserController extends BaseSystemController
             ->setMessage(trans('core/acl::users.update_preferences_success'));
     }
 
-    /**
-     * Update user preferences with patch request
-     * 
-     * @param User $user The user model
-     * @param PreferencePatchRequest $request The validated preference patch request
-     * @return mixed Returns response with updated preferences
-     */
     public function patchUpdatePreferences(User $user, PreferencePatchRequest $request)
     {
         foreach ($request->validated() as $key => $value) {
@@ -288,13 +222,6 @@ class UserController extends BaseSystemController
         return $this->httpResponse()->withUpdatedSuccessMessage();
     }
 
-    /**
-     * Update user avatar
-     * 
-     * @param User $user The user model
-     * @param AvatarRequest $request The validated avatar update request
-     * @return mixed Returns response with updated avatar
-     */
     public function postAvatar(User $user, AvatarRequest $request)
     {
         $currentUser = $request->user();
@@ -337,13 +264,6 @@ class UserController extends BaseSystemController
         }
     }
 
-    /**
-     * Remove user avatar
-     * 
-     * @param User $user The user model
-     * @param Request $request The HTTP request instance
-     * @return mixed Returns response with removed avatar
-     */
     public function removeAvatar(User $user, Request $request)
     {
         $currentUser = $request->user();
@@ -373,12 +293,6 @@ class UserController extends BaseSystemController
             ->setData(['url' => $user->avatar_url]);
     }
 
-    /**
-     * Grant super user role to a user
-     * 
-     * @param User $user The user model
-     * @return mixed Returns response with success/error message
-     */
     public function makeSuper(User $user)
     {
         try {
@@ -401,13 +315,6 @@ class UserController extends BaseSystemController
         }
     }
 
-    /**
-     * Revoke super user role from a user
-     * 
-     * @param User $user The user model
-     * @param Request $request The HTTP request instance
-     * @return mixed Returns response with success/error message
-     */
     public function removeSuper(User $user, Request $request)
     {
         if ($request->user()->is($user)) {

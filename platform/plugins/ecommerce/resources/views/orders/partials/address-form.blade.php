@@ -321,18 +321,20 @@
 
     @if (!auth('customer')->check())
         <div id="register-an-account-wrapper">
-            <div class="mb-3 form-group">
-                <input
-                    id="create_account"
-                    name="create_account"
-                    type="checkbox"
-                    value="1"
-                    @if (old('create_account') == 1) checked @endif
-                >
-                <label
-                    class="form-label"
-                    for="create_account"
-                >{{ __('Register an account with above information?') }}</label>
+            <div class="mb-3">
+                <label class="form-check">
+                    <input
+                        id="create_account"
+                        name="create_account"
+                        type="checkbox"
+                        value="1"
+                        class="form-check-input"
+                        @if (old('create_account') == 1) checked @endif
+                    >
+                    <span
+                        class="form-check-label"
+                    >{{ __('Register an account with above information?') }}</span>
+                </label>
             </div>
 
             <div class="password-group @if (!$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">

@@ -6,7 +6,6 @@ use Botble\Base\Http\Controllers\BaseController;
 use Botble\Ecommerce\Facades\Cart;
 use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Models\Product;
-use Botble\Ecommerce\Models\ProductAttributeSet;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Theme\Facades\Theme;
@@ -34,13 +33,19 @@ class CompareController extends BaseController
         $products = collect();
         $attributeSets = collect();
         if ($itemIds->isNotEmpty()) {
+            $productIds = $itemIds->all();
+
             $products = $this->productRepository
-                ->getProductsByIds($itemIds->all(), array_merge([
+                ->getProductsByIds($productIds, array_merge([
                     'take' => 10,
                     'with' => EcommerceHelper::withProductEagerLoadingRelations(),
                 ], EcommerceHelper::withReviewsParams()));
 
-            $attributeSets = ProductAttributeSet::getAllWithSelected($itemIds);
+            $attributeSets = collect();
+
+            foreach ($products->load('productAttributeSets.attributes') as $product) {
+                $attributeSets = $attributeSets->merge($product->productAttributeSets);
+            }
         }
 
         return Theme::scope(

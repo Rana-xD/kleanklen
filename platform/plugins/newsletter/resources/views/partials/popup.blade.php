@@ -3,7 +3,7 @@
     $image = theme_option('newsletter_popup_image');
 @endphp
 
-<link rel="stylesheet" href="{{ asset('vendor/core/plugins/newsletter/css/newsletter.css') }}?v=1.2.5">
+<link rel="stylesheet" href="{{ asset('vendor/core/plugins/newsletter/css/newsletter.css') }}?v=1.2.7">
 
 <div @class(['modal-dialog', 'modal-lg' => $image])>
     <div @class(['modal-content border-0', 'd-flex flex-md-col flex-lg-row' => $image])>

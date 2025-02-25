@@ -29,7 +29,7 @@ Route::group([
     Route::get('brands/{slug}', [BrandController::class, 'show']);
     Route::get('brands/{id}/products', [BrandController::class, 'products']);
 
-    Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function (): void {
         Route::get('orders', [OrderController::class, 'index']);
         Route::get('orders/{id}', [OrderController::class, 'show']);
         Route::get('addresses', [AddressController::class, 'index']);

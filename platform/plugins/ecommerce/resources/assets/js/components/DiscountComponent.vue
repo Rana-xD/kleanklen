@@ -930,7 +930,7 @@ export default {
         dateFormat: {
             type: String,
             default: () => 'Y-m-d',
-            required: true,
+            required: false,
         },
         discount: {
             type: Object,

@@ -771,7 +771,7 @@ class OrderSupportServiceProvider extends ServiceProvider
                     )) {
                         if (
                             (is_string($optionRequest) || is_int($optionRequest))
-                            && array_key_exists($optionRequest, Arr::get($shipping, $defaultShippingMethod))
+                            && array_key_exists($optionRequest, (array) Arr::get($shipping, $defaultShippingMethod, []))
                         ) {
                             $defaultShippingOption = $optionRequest;
                         }
@@ -782,7 +782,9 @@ class OrderSupportServiceProvider extends ServiceProvider
                             $defaultShippingOption
                         );
 
-                        if (isset($shipping[$defaultShippingMethod][$defaultShippingOptionFromSession])) {
+                        $defaultShippingMethodValue = (array) Arr::get($shipping, $defaultShippingMethod, []);
+
+                        if (isset($defaultShippingMethodValue[$defaultShippingOptionFromSession])) {
                             $defaultShippingOption = $defaultShippingOptionFromSession;
                         }
                     }

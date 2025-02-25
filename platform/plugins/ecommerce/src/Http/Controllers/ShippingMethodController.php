@@ -15,20 +15,8 @@ use Botble\Ecommerce\Models\ShippingRuleItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-/**
- * Class ShippingMethodController
- *
- * This controller handles shipping method management including regions, rules, and pricing.
- * It provides functionality for creating, updating, and deleting shipping regions and rules.
- */
 class ShippingMethodController extends BaseController
 {
-    /**
-     * Create a new shipping region with default rules.
-     *
-     * @param AddShippingRegionRequest $request The validated request containing region data
-     * @return mixed Response with success/error message
-     */
     public function postCreateRegion(AddShippingRegionRequest $request)
     {
         $country = $request->input('region');
@@ -74,12 +62,6 @@ class ShippingMethodController extends BaseController
             ->withCreatedSuccessMessage();
     }
 
-    /**
-     * Delete a shipping region.
-     *
-     * @param Request $request The request containing region ID
-     * @return mixed Response indicating deletion status
-     */
     public function deleteRegion(Request $request)
     {
         /**
@@ -90,12 +72,6 @@ class ShippingMethodController extends BaseController
         return DeleteResourceAction::make($shipping);
     }
 
-    /**
-     * Delete a shipping rule and its associated region if no rules remain.
-     *
-     * @param Request $request The request containing rule ID
-     * @return mixed Response with deletion status and updated counts
-     */
     public function deleteRegionRule(Request $request)
     {
         $rule = ShippingRule::query()->findOrFail($request->input('id'));
@@ -120,13 +96,6 @@ class ShippingMethodController extends BaseController
         ]);
     }
 
-    /**
-     * Update an existing shipping rule and its items.
-     *
-     * @param int|string $id The ID of the shipping rule
-     * @param ShippingRuleRequest $request The validated request containing rule data
-     * @return mixed Response with updated rule data
-     */
     public function putUpdateRule(int|string $id, ShippingRuleRequest $request)
     {
         /**
@@ -165,12 +134,6 @@ class ShippingMethodController extends BaseController
             ->withUpdatedSuccessMessage();
     }
 
-    /**
-     * Create a new shipping rule for a region.
-     *
-     * @param ShippingRuleRequest $request The validated request containing rule data
-     * @return mixed Response with created rule data
-     */
     public function postCreateRule(ShippingRuleRequest $request)
     {
         $shipping = Shipping::query()->findOrFail($request->input('shipping_id'));

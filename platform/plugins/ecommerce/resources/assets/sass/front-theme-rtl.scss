@@ -27,15 +27,16 @@ body[dir='rtl'] {
         padding-right: 0;
     }
 
-    .hrv-checkbox,
     input[type='checkbox'] {
-        margin: 0 0 0 0.5rem;
-    }
+        &:before {
+            left: 0;
+            right: 0;
+        }
 
-    .hrv-checkbox:before,
-    input[type='checkbox']:not(.hrv-checkbox):before {
-        left: 0;
-        right: 2px;
+        &:after {
+            left: auto;
+            right: -2px;
+        }
     }
 
     .magic-checkbox + label:before,

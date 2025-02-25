@@ -19,7 +19,7 @@ class EnsureLicenseHasBeenActivated
             ! is_in_admin(true)
             || Auth::guest()
             || $this->core->isSkippedLicenseReminder()
-            || $this->core->verifyLicense(true)
+            || $this->core->verifyLicense(true, 15)
         ) {
             return $next($request);
         }
@@ -36,4 +36,5 @@ class EnsureLicenseHasBeenActivated
 
         return $next($request);
     }
+
 }

@@ -2,8 +2,10 @@
 
 namespace Botble\Ecommerce\Forms\Settings;
 
+use Botble\Base\Forms\FieldOptions\MediaImageFieldOption;
 use Botble\Base\Forms\FieldOptions\OnOffFieldOption;
 use Botble\Base\Forms\FieldOptions\RadioFieldOption;
+use Botble\Base\Forms\Fields\MediaImageField;
 use Botble\Base\Forms\Fields\OnOffCheckboxField;
 use Botble\Base\Forms\Fields\RadioField;
 use Botble\Ecommerce\Facades\EcommerceHelper;
@@ -73,6 +75,14 @@ class CustomerSettingForm extends SettingForm
                         'phone' => trans('plugins/ecommerce::setting.customer.form.login_with_phone'),
                         'email_or_phone' => trans('plugins/ecommerce::setting.customer.form.login_with_email_or_phone'),
                     ]),
+            )
+            ->add(
+                'customer_default_avatar',
+                MediaImageField::class,
+                MediaImageFieldOption::make()
+                    ->label(trans('plugins/ecommerce::setting.customer.form.default_avatar'))
+                    ->helperText(trans('plugins/ecommerce::setting.customer.form.default_avatar_helper'))
+                    ->value(get_ecommerce_setting('customer_default_avatar'))
             );
     }
 }

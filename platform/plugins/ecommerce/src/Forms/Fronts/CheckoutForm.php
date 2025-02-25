@@ -17,7 +17,9 @@ use Botble\Ecommerce\Http\Requests\SaveCheckoutInformationRequest;
 use Botble\Theme\Facades\Theme;
 use Botble\Theme\FormFront;
 use Closure;
+use Detection\MobileDetect;
 use Illuminate\Support\Arr;
+use Throwable;
 
 class CheckoutForm extends FormFront
 {
@@ -41,54 +43,57 @@ class CheckoutForm extends FormFront
                 '<div class="row" id="main-checkout-product-info">',
                 '</div>',
                 function (CheckoutForm $form) use ($token, $model): void {
+                    $cartItemHtml = HtmlFieldOption::make()->content(view('plugins/ecommerce::orders.partials.amount', $model));
+                    $discountFormHtml = HtmlFieldOption::make()->content(view(EcommerceHelper::viewPath('discounts.partials.form'), ['discounts' => $model['discounts']]));
+
+                    try {
+                        $mobileDetect = new MobileDetect();
+
+                        $isMobile = $mobileDetect->isMobile();
+                    } catch (Throwable) {
+                        $isMobile = false;
+                    }
+
                     $form
-                        ->addWrapper(
-                            'right_column_wrapper',
-                            '<div class="col-lg-5 col-md-6 order-1 order-md-2">',
-                            '</div>',
-                            function (CheckoutForm $form) use ($model): void {
-                                $form
-                                    ->addWrapper(
-                                        'right_column_logo_wrapper',
-                                        '<div class="d-block d-sm-none">',
-                                        '</div>',
-                                        fn (CheckoutForm $form) => $form->add(
-                                            'right_column_logo',
-                                            HtmlField::class,
-                                            HtmlFieldOption::make()->content(view('plugins/ecommerce::orders.partials.logo'))
+                        ->when(! $isMobile, function (CheckoutForm $form) use ($model, $discountFormHtml, $cartItemHtml): void {
+                            $form->addWrapper(
+                                'right_column_wrapper',
+                                '<div class="col-lg-5 col-md-6 order-2">',
+                                '</div>',
+                                function (CheckoutForm $form) use ($discountFormHtml, $cartItemHtml, $model): void {
+                                    $form
+                                        ->addWrapper(
+                                            'right_column_cart_item_wrapper',
+                                            '<div class="my-3 bg-light"><div class="position-relative p-3 cart-item-wrapper">',
+                                            '</div></div>',
+                                            fn (CheckoutForm $form) => $form->add(
+                                                'right_column_cart_item',
+                                                HtmlField::class,
+                                                $cartItemHtml
+                                            )
                                         )
-                                    )
-                                    ->addWrapper(
-                                        'right_column_cart_item_wrapper',
-                                        '<div class="my-3 bg-light"><div class="position-relative p-3" id="cart-item">',
-                                        '</div></div>',
-                                        fn (CheckoutForm $form) => $form->add(
-                                            'right_column_cart_item',
-                                            HtmlField::class,
-                                            HtmlFieldOption::make()->content(view('plugins/ecommerce::orders.partials.amount', $model))
-                                        )
-                                    )
-                                    ->addWrapper(
-                                        'right_column_discount_wrapper',
-                                        '<div class="mt-3 mb-5">',
-                                        '</div>',
-                                        fn (CheckoutForm $form) => $form->add(
-                                            'right_column_discount',
-                                            HtmlField::class,
-                                            HtmlFieldOption::make()->content(view(EcommerceHelper::viewPath('discounts.partials.form'), ['discounts' => $model['discounts']]))
-                                        )
-                                    );
-                            }
-                        )
+                                        ->addWrapper(
+                                            'right_column_discount_wrapper',
+                                            '<div class="mt-3 mb-5">',
+                                            '</div>',
+                                            fn (CheckoutForm $form) => $form->add(
+                                                'right_column_discount',
+                                                HtmlField::class,
+                                                $discountFormHtml,
+                                            )
+                                        );
+                                }
+                            );
+                        })
                         ->addWrapper(
                             'left_column_wrapper',
-                            '<div class="form-checkout col-lg-7 col-md-6">',
+                            $isMobile ? '<div class="form-checkout col-lg-7">' : '<div class="form-checkout col-lg-7 col-md-6">',
                             '</div>',
-                            function (CheckoutForm $form) use ($token, $model): void {
+                            function (CheckoutForm $form) use ($isMobile, $discountFormHtml, $cartItemHtml, $token, $model): void {
                                 $form
                                     ->addWrapper(
                                         'left_column_logo_wrapper',
-                                        '<div class="d-none d-sm-block">',
+                                        '<div>',
                                         '</div>',
                                         fn (CheckoutForm $form) => $form->add(
                                             'left_column_logo',
@@ -158,42 +163,70 @@ class CheckoutForm extends FormFront
                                                 HtmlFieldOption::make()->content(apply_filters('ecommerce_checkout_form_after_billing_address_form', null, $model['products']))
                                             );
                                     })
-                                    ->when(! is_plugin_active('marketplace') && Arr::get($model, 'sessionCheckoutData.is_available_shipping', true), function (CheckoutForm $form) use ($model): void {
+                                    ->when(
+                                        ! is_plugin_active('marketplace')
+                                        && Arr::get($model, 'sessionCheckoutData.is_available_shipping', true)
+                                        && (! (bool) get_ecommerce_setting('disable_shipping_options', false)),
+                                        function (CheckoutForm $form) use ($model): void {
+                                            $form
+                                                ->addWrapper(
+                                                    'shipping_method_wrapper',
+                                                    '<div class="shipping-method-wrapper mb-4">',
+                                                    '</div>',
+                                                    function (CheckoutForm $form) use ($model): void {
+                                                        $form
+                                                            ->add(
+                                                                'shipping_method_title',
+                                                                HtmlField::class,
+                                                                HtmlFieldOption::make()->content('<h5 class="checkout-payment-title">' . __('Shipping method') . '</h5>')
+                                                            )
+                                                            ->add(
+                                                                'shipping_method_loading',
+                                                                HtmlField::class,
+                                                                HtmlFieldOption::make()->content('<div class="shipping-info-loading loading-spinner" style="display: none;"></div>')
+                                                            )
+                                                            ->addWrapper(
+                                                                'shipping_methods_area_wrapper',
+                                                                '<div data-bb-toggle="checkout-shipping-methods-area">',
+                                                                '</div>',
+                                                                function (CheckoutForm $form) use ($model): void {
+                                                                    $form->add(
+                                                                        'shipping_methods',
+                                                                        HtmlField::class,
+                                                                        HtmlFieldOption::make()->content(view('plugins/ecommerce::orders.partials.shipping-methods', $model))
+                                                                    );
+                                                                }
+                                                            );
+                                                    }
+                                                )
+                                                ->add(
+                                                    'filters_ecommerce_checkout_form_after_shipping_method_form',
+                                                    HtmlField::class,
+                                                    HtmlFieldOption::make()->content(apply_filters('ecommerce_checkout_form_after_shipping_address_form', null, $model['products']))
+                                                );
+                                        }
+                                    )
+                                    ->when($isMobile, function (CheckoutForm $form) use ($discountFormHtml, $cartItemHtml): void {
                                         $form
                                             ->addWrapper(
-                                                'shipping_method_wrapper',
-                                                '<div class="shipping-method-wrapper mb-4">',
-                                                '</div>',
-                                                function (CheckoutForm $form) use ($model): void {
-                                                    $form
-                                                        ->add(
-                                                            'shipping_method_title',
-                                                            HtmlField::class,
-                                                            HtmlFieldOption::make()->content('<h5 class="checkout-payment-title">' . __('Shipping method') . '</h5>')
-                                                        )
-                                                        ->add(
-                                                            'shipping_method_loading',
-                                                            HtmlField::class,
-                                                            HtmlFieldOption::make()->content('<div class="shipping-info-loading loading-spinner" style="display: none;"></div>')
-                                                        )
-                                                        ->addWrapper(
-                                                            'shipping_methods_area_wrapper',
-                                                            '<div data-bb-toggle="checkout-shipping-methods-area">',
-                                                            '</div>',
-                                                            function (CheckoutForm $form) use ($model): void {
-                                                                $form->add(
-                                                                    'shipping_methods',
-                                                                    HtmlField::class,
-                                                                    HtmlFieldOption::make()->content(view('plugins/ecommerce::orders.partials.shipping-methods', $model))
-                                                                );
-                                                            }
-                                                        );
-                                                }
+                                                'mobile_cart_item_wrapper',
+                                                '<div class="my-3 bg-light"><div class="position-relative p-3 cart-item-wrapper">',
+                                                '</div></div>',
+                                                fn (CheckoutForm $form) => $form->add(
+                                                    'mobile_cart_item',
+                                                    HtmlField::class,
+                                                    $cartItemHtml,
+                                                )
                                             )
-                                            ->add(
-                                                'filters_ecommerce_checkout_form_after_shipping_method_form',
-                                                HtmlField::class,
-                                                HtmlFieldOption::make()->content(apply_filters('ecommerce_checkout_form_after_shipping_address_form', null, $model['products']))
+                                            ->addWrapper(
+                                                'mobile_discount_wrapper',
+                                                '<div class="mt-3 mb-5">',
+                                                '</div>',
+                                                fn (CheckoutForm $form) => $form->add(
+                                                    'mobile_discount',
+                                                    HtmlField::class,
+                                                    $discountFormHtml,
+                                                )
                                             );
                                     })
                                     ->add(

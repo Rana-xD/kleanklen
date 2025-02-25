@@ -846,6 +846,17 @@ class Ecommerce {
         return data
     }
 
+    highlightSearchKeywords = ($element, phrase) => {
+        if (!phrase.trim()) {
+            return
+        }
+
+        let keywords = phrase.trim().split(/\s+/)
+        let regex = new RegExp(`(${keywords.join('|')})`, 'gi')
+
+        $element.html($element.text().replace(regex, '<span class="bb-quick-search-highlight">$1</span>'))
+    }
+
     #ajaxSearchProducts = (form, url) => {
         const button = form.find('button[type="submit"]')
         const input = form.find('input[name="q"]')
@@ -886,6 +897,18 @@ class Ecommerce {
                 } else {
                     results.html(data)
                 }
+
+                let that = this
+
+                let searchPhrase = input.val()
+                results.find('.bb-quick-search-item-name').each(function () {
+                    $(this).html($(this).text())
+
+                    if (searchPhrase) {
+                        that.highlightSearchKeywords($(this), searchPhrase)
+                    }
+                })
+
 
                 if (typeof Theme.lazyLoadInstance !== 'undefined') {
                     Theme.lazyLoadInstance.update()

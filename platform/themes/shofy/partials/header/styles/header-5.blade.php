@@ -103,7 +103,7 @@
                                 <div class="tp-header-action-5 d-flex align-items-center ml-20">
                                     @if(is_plugin_active('ecommerce'))
                                         @if (EcommerceHelper::isWishlistEnabled())
-                                            <div class="tp-header-action-item-5 d-none d-sm-block">
+                                            <div class="tp-header-action-item-5 d-none d-sm-block tp-header-action-item-wishlist">
                                                 <a href="{{ route('public.wishlist') }}">
                                                     <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -123,7 +123,7 @@
                                         @endif
 
                                         @if (EcommerceHelper::isCartEnabled())
-                                            <div class="tp-header-action-item-5">
+                                            <div class="tp-header-action-item-5 tp-header-action-item-cart">
                                                 <button type="button" class="cartmini-open-btn" data-bb-toggle="open-mini-cart" data-url="{{ route('public.ajax.cart-content') }}">
                                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -151,7 +151,7 @@
                                         @endif
                                     @endif
 
-                                    <div class="tp-header-action-item-5 d-none d-sm-block d-xxl-none">
+                                    <div class="tp-header-action-item-5 d-none d-sm-block d-xxl-none tp-header-action-item-search">
                                         <button type="button" class="tp-search-open-btn">
                                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path

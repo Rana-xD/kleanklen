@@ -95,6 +95,14 @@ if (! function_exists('ecommerce_convert_weight')) {
                 $weight = $weight * 1000;
 
                 break;
+            case 'lb':
+                $weight = $weight * 453.592;
+
+                break;
+            case 'oz':
+                $weight = $weight * 28.3495;
+
+                break;
         }
 
         return (float) $weight;
@@ -106,6 +114,10 @@ if (! function_exists('ecommerce_convert_width_height')) {
     {
         switch (get_ecommerce_setting('store_width_height_unit', 'cm')) {
             case 'cm':
+                break;
+            case 'inch':
+                $data = $data * 2.54;
+
                 break;
             case 'm':
                 $data = $data * 100;

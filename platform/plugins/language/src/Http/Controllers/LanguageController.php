@@ -14,6 +14,9 @@ use Botble\Language\Http\Requests\LanguageRequest;
 use Botble\Language\LanguageManager;
 use Botble\Language\Models\Language as LanguageModel;
 use Botble\Language\Models\LanguageMeta;
+use Botble\Menu\Models\Menu;
+use Botble\Menu\Models\MenuLocation;
+use Botble\Menu\Models\MenuNode;
 use Botble\Setting\Facades\Setting;
 use Botble\Setting\Http\Controllers\SettingController;
 use Botble\Theme\Facades\Theme;
@@ -27,26 +30,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Throwable;
 
-/**
- * Controller for managing multilingual functionality and language settings
- *
- * This controller handles all language-related operations including:
- * - Language creation, update, and deletion
- * - Setting default language
- * - Managing language metadata
- * - Handling language files and translations
- * - Theme language integration
- */
 class LanguageController extends SettingController
 {
-    /**
-     * Display the language management page
-     *
-     * Shows a list of all languages, their flags, and settings form
-     * Loads necessary assets for language management
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         $this->pageTitle(trans('plugins/language::language.name'));
@@ -67,16 +52,6 @@ class LanguageController extends SettingController
         );
     }
 
-    /**
-     * Store a new language in the system
-     *
-     * Creates a new language entry and sets up necessary files and metadata
-     * Also handles initial content translation if it's the first language
-     *
-     * @param LanguageRequest $request Validated language data
-     * @param LanguageManager $languageManager Language management service
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function store(LanguageRequest $request, LanguageManager $languageManager)
     {
         try {
@@ -116,6 +91,8 @@ class LanguageController extends SettingController
 
             event(new CreatedContentEvent(LANGUAGE_MODULE_SCREEN_NAME, $request, $language));
 
+            $this->cloneMenusToLanguage($language);
+
             try {
                 $models = $languageManager->supportedModels();
 
@@ -125,7 +102,8 @@ class LanguageController extends SettingController
                             continue;
                         }
 
-                        $ids = LanguageMeta::query()->where('reference_type', $model)
+                        $ids = LanguageMeta::query()
+                            ->where('reference_type', $model)
                             ->pluck('reference_id')
                             ->all();
 
@@ -168,15 +146,6 @@ class LanguageController extends SettingController
         }
     }
 
-    /**
-     * Import locale files if they don't exist
-     *
-     * Attempts to download locale from translation service or copies from default locale
-     * Creates necessary directory structure for new locale
-     *
-     * @param string $locale The locale code to import
-     * @return bool True if locale was imported from translation service
-     */
     protected function importLocaleIfMissing(string $locale): bool
     {
         if (File::isDirectory(lang_path($locale))) {
@@ -207,15 +176,6 @@ class LanguageController extends SettingController
         return $importedLocale;
     }
 
-    /**
-     * Update an existing language's settings
-     *
-     * Modifies language attributes and ensures locale files exist
-     * Clears route cache after update
-     *
-     * @param Request $request Update request with language data
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function update(Request $request)
     {
         try {
@@ -245,15 +205,6 @@ class LanguageController extends SettingController
         }
     }
 
-    /**
-     * Handle changing language for a specific content item
-     *
-     * Maps content between different language versions and manages language metadata
-     * Returns available language options for the content
-     *
-     * @param Request $request Request with content reference data
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function postChangeItemLanguage(Request $request)
     {
         $referenceId = $request->input('reference_id') ?: $request->input('lang_meta_created_from');
@@ -309,15 +260,6 @@ class LanguageController extends SettingController
             ->setData($data);
     }
 
-    /**
-     * Delete a language from the system
-     *
-     * Removes language and updates default language if necessary
-     * Cleans up related data and cache
-     *
-     * @param int|string $id Language ID to delete
-     * @return mixed
-     */
     public function destroy(int|string $id)
     {
         $language = LanguageModel::query()->where('lang_id', $id)->first();
@@ -340,15 +282,6 @@ class LanguageController extends SettingController
             });
     }
 
-    /**
-     * Set a language as the system default
-     *
-     * Updates theme widgets, options, and settings for the new default language
-     * Handles content migration between language versions
-     *
-     * @param Request $request Request with new default language ID
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getSetDefault(Request $request)
     {
         $newLanguageId = $request->input('lang_id');
@@ -473,12 +406,6 @@ class LanguageController extends SettingController
             ->withUpdatedSuccessMessage();
     }
 
-    /**
-     * Retrieve language details by ID
-     *
-     * @param Request $request Request with language ID
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getLanguage(Request $request)
     {
         $language = LanguageModel::query()->where('lang_id', $request->input('lang_id'))->first();
@@ -488,15 +415,6 @@ class LanguageController extends SettingController
             ->setData($language);
     }
 
-    /**
-     * Change the current interface language
-     *
-     * Redirects to previous URL with updated language code in query string
-     *
-     * @param string $code Language code to switch to
-     * @param LanguageManager $language Language manager service
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function getChangeDataLanguage($code, LanguageManager $language)
     {
         $previousUrl = strtok(URL::previous(), '?');
@@ -509,16 +427,6 @@ class LanguageController extends SettingController
         return redirect()->to($previousUrl . $queryString);
     }
 
-    /**
-     * Create locale files in specified path
-     *
-     * Copies English language files to new locale directory
-     * Creates locale structure for core, packages, and plugins
-     *
-     * @param string $path Base path for locale files
-     * @param string $locale Target locale code
-     * @return int Number of processed folders
-     */
     protected function createLocaleInPath(string $path, string $locale): int
     {
         $folders = File::directories($path);
@@ -534,13 +442,6 @@ class LanguageController extends SettingController
         return count($folders);
     }
 
-    /**
-     * Clear the routes cache for all languages
-     *
-     * Removes cached route files for each supported language
-     *
-     * @return bool True if cache was cleared successfully
-     */
     public function clearRoutesCache(): bool
     {
         $path = app()->getCachedRoutesPath();
@@ -560,13 +461,6 @@ class LanguageController extends SettingController
         return true;
     }
 
-    /**
-     * Copy theme language files for a new locale
-     *
-     * Handles both main theme and inherited theme language files
-     *
-     * @param mixed $locale Target locale code
-     */
     protected function copyThemeLangFiles(mixed $locale)
     {
         if (Theme::hasInheritTheme()) {
@@ -576,14 +470,6 @@ class LanguageController extends SettingController
         $this->copyThemeLangFilesFromTheme(Theme::getThemeName(), $locale);
     }
 
-    /**
-     * Copy language files from a specific theme
-     *
-     * Copies theme's language files to the application's lang directory
-     *
-     * @param string $theme Theme directory name
-     * @param string $locale Target locale code
-     */
     protected function copyThemeLangFilesFromTheme(string $theme, string $locale): void
     {
         $themeLangPath = theme_path($theme . '/lang');
@@ -599,5 +485,58 @@ class LanguageController extends SettingController
         }
 
         File::copy($themeLocalePath, lang_path($locale . '.json'));
+    }
+
+    protected function cloneMenusToLanguage(LanguageModel $language): void
+    {
+        $menus = Menu::query()
+            ->with(['menuNodes', 'locations'])
+            ->join('language_meta', 'language_meta.reference_id', '=', 'menus.id')
+            ->where('language_meta.reference_type', Menu::class)
+            ->where('language_meta.lang_meta_code', LanguageFacade::getDefaultLocaleCode())
+            ->select('menus.*')
+            ->get();
+
+        foreach ($menus as $menu) {
+            /**
+             * @var Menu $menuItem
+             */
+            $menuItem = $menu->replicate();
+            $menuItem->slug = $menu->slug . '-' . $language->lang_code;
+            $menuItem->save();
+
+            $originValue = LanguageMeta::query()
+                ->where('reference_id', $menu->id)
+                ->where('reference_type', Menu::class)
+                ->value('lang_meta_origin');
+
+            LanguageMeta::saveMetaData($menuItem, $language->lang_code, $originValue);
+
+            foreach ($menu->locations as $location) {
+                $menuLocationItem = $location->replicate();
+                $menuLocationItem->menu_id = $menuItem->getKey();
+                $menuLocationItem->save();
+
+                $originValue = LanguageMeta::query()
+                    ->where('reference_id', $location->id)
+                    ->where('reference_type', MenuLocation::class)
+                    ->value('lang_meta_origin');
+
+                LanguageMeta::saveMetaData($menuLocationItem, $language->lang_code, $originValue);
+            }
+
+            foreach ($menu->menuNodes as $menuNode) {
+                $menuNodeItem = $menuNode->replicate();
+                $menuNodeItem->menu_id = $menuItem->getKey();
+                $menuNodeItem->save();
+
+                $originValue = LanguageMeta::query()
+                    ->where('reference_id', $menuNode->id)
+                    ->where('reference_type', MenuNode::class)
+                    ->value('lang_meta_origin');
+
+                LanguageMeta::saveMetaData($menuNodeItem, $language->lang_code, $originValue);
+            }
+        }
     }
 }

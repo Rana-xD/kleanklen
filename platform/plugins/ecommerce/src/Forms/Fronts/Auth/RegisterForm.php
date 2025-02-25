@@ -60,7 +60,7 @@ class RegisterForm extends AuthForm
                     ->icon('ti ti-mail')
                     ->addAttribute('autocomplete', 'email')
             )
-            ->when(get_ecommerce_setting('enabled_phone_field_in_registration_form', true), static function (FormAbstract $form) {
+            ->when(get_ecommerce_setting('enabled_phone_field_in_registration_form', true), static function (FormAbstract $form): void {
                 $form
                     ->add(
                         'phone',

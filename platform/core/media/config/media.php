@@ -31,7 +31,7 @@ return [
     ],
     'allowed_mime_types' => env(
         'RV_MEDIA_ALLOWED_MIME_TYPES',
-        'jpg,jpeg,png,gif,txt,docx,zip,mp3,bmp,csv,xls,xlsx,ppt,pptx,pdf,mp4,m4v,doc,mpga,wav,webp,webm,mov,jfif,avif'
+        'jpg,jpeg,png,gif,txt,docx,zip,mp3,bmp,csv,xls,xlsx,ppt,pptx,pdf,mp4,m4v,doc,mpga,wav,webp,webm,mov,jfif,avif,rar'
     ),
     'mime_types' => [
         'image' => [

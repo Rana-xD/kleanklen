@@ -510,6 +510,10 @@ class EcommerceServiceProvider extends ServiceProvider
                 'name',
             ]);
 
+            LanguageAdvancedManager::registerModule(Tax::class, [
+                'title',
+            ]);
+
             LanguageAdvancedManager::registerModule(GlobalOption::class, [
                 'name',
             ]);

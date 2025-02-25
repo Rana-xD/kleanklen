@@ -151,7 +151,7 @@ class MainCheckout {
                     $('.shipping-info-loading').show()
                 },
                 success: ({ data }) => {
-                    $('#cart-item').html(data.amount)
+                    $('.cart-item-wrapper').html(data.amount)
                     $('[data-bb-toggle="checkout-payment-methods-area"]').html(data.payment_methods)
                     $('[data-bb-toggle="checkout-shipping-methods-area"]').html(data.shipping_methods)
                 },
@@ -268,7 +268,7 @@ class MainCheckout {
                 contentType: false,
                 processData: false,
                 success: ({ data }) => {
-                    $('#cart-item').html(data.amount)
+                    $('.cart-item-wrapper').html(data.amount)
                 },
                 error: (response) => {
                     MainCheckout.handleError(response, $form)
@@ -300,8 +300,10 @@ class MainCheckout {
             $('.tax-information-form-wrapper').toggle(_self.is(':checked'))
         })
 
-        if ($('#address_id').length && $('#address_id').val() && $('#address_id').val() !== 'new') {
-            $('#address_id').trigger('change')
+        const $addressId = $('#address_id')
+
+        if ($addressId.length && $addressId.val() && $addressId.val() !== 'new') {
+            $addressId.trigger('change')
         }
 
         $(document)

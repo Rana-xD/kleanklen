@@ -187,7 +187,11 @@ class ProductCategoryHelper
                 'ec_product_categories.name',
                 'ec_product_categories.order',
                 'parent_id',
-                DB::raw("CONCAT({$tablePrefix}slugs.prefix, '/', {$tablePrefix}slugs.key) as url"),
+                DB::raw("
+                    CONCAT({$tablePrefix}slugs.prefix,
+                    IF({$tablePrefix}slugs.prefix IS NOT NULL AND {$tablePrefix}slugs.prefix != '', '/', ''),
+                    {$tablePrefix}slugs.key) as url
+                "),
                 'icon',
                 'image',
                 'icon_image',
@@ -205,9 +209,13 @@ class ProductCategoryHelper
                             ->where('st.lang_code', Language::getCurrentLocaleCode());
                     })
                     ->addSelect(
-                        DB::raw(
-                            "IF(st.key IS NOT NULL, CONCAT(st.prefix, '/', st.key), CONCAT(slugs.prefix, '/', slugs.key)) as url"
-                        )
+                        DB::raw("
+                            IF(
+                                st.key IS NOT NULL,
+                                CONCAT(st.prefix, IF(st.prefix IS NOT NULL AND st.prefix != '', '/', ''), st.key),
+                                CONCAT(slugs.prefix, IF(slugs.prefix IS NOT NULL AND slugs.prefix != '', '/', ''), slugs.key)
+                            ) as url
+                        ")
                     );
             })
             ->oldest('ec_product_categories.order')

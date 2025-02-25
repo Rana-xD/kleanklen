@@ -9,17 +9,6 @@ use Botble\Ecommerce\Http\Requests\ProductTagRequest;
 use Botble\Ecommerce\Models\ProductTag;
 use Botble\Ecommerce\Tables\ProductTagTable;
 
-/**
- * Class ProductTagController
- *
- * @package Botble\Ecommerce\Http\Controllers
- *
- * Controller for managing product tags in the e-commerce system.
- * Handles CRUD operations for product tags which help in categorizing
- * and filtering products. Tags provide a flexible way to group related
- * products together.
- */
-
 class ProductTagController extends BaseController
 {
     protected function breadcrumb(): Breadcrumb

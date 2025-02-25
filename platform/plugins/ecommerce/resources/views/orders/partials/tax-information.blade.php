@@ -1,14 +1,17 @@
 <div class="customer-tax-information-form">
-    <div class="form-check ps-0 mb-3">
-        <input
-            id="with_tax_information"
-            name="with_tax_information"
-            type="checkbox"
-            value="1"
-            @checked (old('with_tax_information', Arr::get($sessionCheckoutData, 'with_tax_information', false)))
-        >
-        <label class="form-check-label" for="with_tax_information">
-            {{ __('Requires company invoice (Please fill in your company information to receive the invoice)?') }}
+    <div class="mb-3">
+        <label class="form-check">
+            <input
+                id="with_tax_information"
+                name="with_tax_information"
+                type="checkbox"
+                value="1"
+                class="form-check-input"
+                @checked (old('with_tax_information', Arr::get($sessionCheckoutData, 'with_tax_information', false)))
+            >
+            <span class="form-check-label">
+                {{ __('Requires company invoice (Please fill in your company information to receive the invoice)?') }}
+            </span>
         </label>
     </div>
 

@@ -39,6 +39,11 @@ class Shortcode
         return $this->attributes;
     }
 
+    public function __set($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+
     public function __get(string $param)
     {
         return $this->attributes[$param] ?? null;
