@@ -1,4 +1,5 @@
-<div class="customer-tax-information-form">
+<div class="customer-tax-information-form"
+ @style(['display: none'])>
     <div class="mb-3">
         <label class="form-check">
             <input
