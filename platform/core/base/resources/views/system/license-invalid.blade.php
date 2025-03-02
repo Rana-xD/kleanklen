@@ -9,7 +9,7 @@
     :important="true"
     @class(['alert-license alert-sticky small', 'vertical-wrapper' => AdminAppearance::isVerticalLayout()])
     icon=""
-    @style(['display: none' => $hidden ?? true])
+    @style(['display: none'])
     data-bb-toggle="authorized-reminder"
 >
     <div class="{{ AdminAppearance::getContainerWidth() }}">
