@@ -1,3 +1,6 @@
+<div style="display: flex;justify-content: center;align-content: center;">
+    <img src="{{ RvMedia::getImageUrl('img-7819.PNG') }}" alt="" style="width: 80%;">
+</div>
 @if ($discounts->isNotEmpty())
     <div class="checkout__coupon-section">
         <div class="checkout__coupon-heading">
