@@ -23,7 +23,7 @@
                 <div class="col-lg-6">
                     <div class="tp-product-details-wrapper has-sticky">
                         @include(Theme::getThemeNamespace('views.ecommerce.includes.product-detail'))
-                        @include(Theme::getThemeNamespace('views.ecommerce.includes.product-sharing'))
+                        <!-- @include(Theme::getThemeNamespace('views.ecommerce.includes.product-sharing')) -->
 
                         {!! dynamic_sidebar('product_details_sidebar') !!}
                     </div>
