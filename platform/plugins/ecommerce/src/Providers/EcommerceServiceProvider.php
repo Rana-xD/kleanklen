@@ -806,6 +806,15 @@ class EcommerceServiceProvider extends ServiceProvider
                     'url' => fn () => route('customers.index'),
                     'permissions' => ['customers.index'],
                 ])
+                ->registerItem([
+                    'id' => 'cms-plugins-product-attribute',
+                    'priority' => 110,
+                    'parent_id' => 'cms-plugins-ecommerce',
+                    'name' => 'plugins/ecommerce::product-attributes.name',
+                    'icon' => 'ti ti-album',
+                    'url' => fn () => route('product-attribute-sets.index'),
+                    'permissions' => ['product-attribute-sets.index'],
+                ])
                 ->when(EcommerceHelper::isProductSpecificationEnabled(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
@@ -879,15 +888,6 @@ class EcommerceServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-album',
                         'url' => fn () => route('product-collections.index'),
                         'permissions' => ['product-collections.index'],
-                    ])
-                    ->registerItem([
-                        'id' => 'cms-plugins-product-attribute',
-                        'priority' => 110,
-                        'parent_id' => 'cms-plugins-ecommerce',
-                        'name' => 'plugins/ecommerce::product-attributes.name',
-                        'icon' => 'ti ti-album',
-                        'url' => fn () => route('product-attribute-sets.index'),
-                        'permissions' => ['product-attribute-sets.index'],
                     ])
                     ->registerItem([
                         'id' => 'cms-plugins-ecommerce-global-options',
