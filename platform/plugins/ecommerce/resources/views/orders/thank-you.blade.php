@@ -30,6 +30,9 @@
 
                 @include('plugins/ecommerce::orders.thank-you.total-info', ['order' => $order])
             </div>
+            <div class="my-3 bg-light p-3" style="display: flex;justify-content: center;align-content: center;">
+                    <img src="{{ RvMedia::getImageUrl('img-7819.PNG') }}" alt="" style="width: 80%;">
+            </div>
         </div>
     </div>
 @stop
