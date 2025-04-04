@@ -61,7 +61,7 @@
             </div>
         </div>
     @endif
-    @if (!empty($shipping) && Arr::get($sessionCheckoutData, 'is_available_shipping', true))
+    <!-- @if (!empty($shipping) && Arr::get($sessionCheckoutData, 'is_available_shipping', true))
         <div class="row">
             <div class="col-6">
                 <p>{{ __('Shipping fee') }}:</p>
@@ -70,7 +70,7 @@
                 <p class="price-text shipping-price-text">{{ format_price($shippingAmount) }}</p>
             </div>
         </div>
-    @endif
+    @endif -->
 
     <div class="row">
         <div class="col-6">
