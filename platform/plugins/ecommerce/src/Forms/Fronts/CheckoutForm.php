@@ -117,7 +117,7 @@ class CheckoutForm extends FormFront
                                                         ->add(
                                                             'shipping_information_title',
                                                             HtmlField::class,
-                                                            HtmlFieldOption::make()->content('<h5 class="checkout-shipping-information-title">' . __('Shipping information') . '</h5>')
+                                                            HtmlFieldOption::make()->content('<h5 class="checkout-shipping-information-title">' . __('Delivery information') . '</h5>')
                                                         )
                                                         ->add(
                                                             'save-shipping-information-url',

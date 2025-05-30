@@ -185,52 +185,7 @@
         @endif
 
         <div class="row">
-            @if (!in_array('state', EcommerceHelper::getHiddenFieldsAtCheckout()))
-                <div class="col-sm-6 col-12">
-                    <div class="form-group mb-3 @error('address.state') has-error @enderror">
-                        @if (EcommerceHelper::loadCountriesStatesCitiesFromPluginLocation())
-                            <div class="select--arrow form-input-wrapper">
-                                <select
-                                    class="form-control"
-                                    id="address_state"
-                                    name="address[state]"
-                                    autocomplete="state"
-                                    data-form-parent=".customer-address-payment-form"
-                                    data-type="state"
-                                    data-url="{{ route('ajax.states-by-country') }}"
-                                    required
-                                >
-                                    <option value="">{{ __('Select state...') }}</option>
-                                    @if (old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId()) || !EcommerceHelper::isUsingInMultipleCountries())
-                                        @foreach (EcommerceHelper::getAvailableStatesByCountry(old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId())) as $stateId => $stateName)
-                                            <option
-                                                value="{{ $stateId }}"
-                                                @if (old('address.state', Arr::get($sessionCheckoutData, 'state')) == $stateId) selected @endif
-                                            >{{ $stateName }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <x-core::icon name="ti ti-chevron-down" />
-                                <label for="address_state">{{ __('State') }}</label>
-                            </div>
-                        @else
-                            <div class="form-input-wrapper">
-                                <input
-                                    class="form-control"
-                                    id="address_state"
-                                    name="address[state]"
-                                    autocomplete="state"
-                                    type="text"
-                                    value="{{ old('address.state', Arr::get($sessionCheckoutData, 'state')) }}"
-                                    required
-                                >
-                                <label for="address_state">{{ __('State') }}</label>
-                            </div>
-                        @endif
-                        {!! Form::error('address.state', $errors) !!}
-                    </div>
-                </div>
-            @endif
+            
 
             @if (!in_array('city', EcommerceHelper::getHiddenFieldsAtCheckout()))
                 <div @class(['col-sm-6 col-12' => ! in_array('state', EcommerceHelper::getHiddenFieldsAtCheckout()), 'col-12' => in_array('state', EcommerceHelper::getHiddenFieldsAtCheckout())])>
@@ -283,21 +238,159 @@
         {!! apply_filters('ecommerce_checkout_address_form_after_city_field', null, $sessionCheckoutData) !!}
 
         @if (!in_array('address', EcommerceHelper::getHiddenFieldsAtCheckout()))
-            <div class="form-group mb-3 @error('address.address') has-error @enderror">
-                <div class="form-input-wrapper">
-                    <input
-                        class="form-control"
-                        id="address_address"
-                        name="address[address]"
-                        autocomplete="address"
-                        type="text"
-                        value="{{ old('address.address', Arr::get($sessionCheckoutData, 'address')) }}"
-                        required
-                    >
-                    <label for="address_address">{{ __('Address') }}</label>
+            <div class="form-group mb-3">
+                <label class="mb-2 form-label">{{ __('Location') }}</label>
+                <div class="location-options mb-3">
+                    <label class="form-check form-check-inline">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="address[location_type]"
+                            value="phnom_penh"
+                            checked
+                            id="location_phnom_penh"
+                        >
+                        <span class="form-check-label">{{ __('Phnom Penh') }}</span>
+                    </label>
+                    <label class="form-check form-check-inline">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="address[location_type]"
+                            value="province"
+                            id="location_province"
+                        >
+                        <span class="form-check-label">{{ __('Province') }}</span>
+                    </label>
                 </div>
-                {!! Form::error('address.address', $errors) !!}
+
+                <!-- <div id="province_selector" class="mb-3 d-none">
+                    <div class="select--arrow form-input-wrapper">
+                        <select
+                            class="form-control"
+                            id="cambodia_province"
+                            name="address[cambodia_province]"
+                            data-type="province"
+                        >
+                            <option value="">{{ __('Select province...') }}</option>
+                            <option value="Banteay Meanchey">Banteay Meanchey</option>
+                            <option value="Battambang">Battambang</option>
+                            <option value="Kampong Cham">Kampong Cham</option>
+                            <option value="Kampong Chhnang">Kampong Chhnang</option>
+                            <option value="Kampong Speu">Kampong Speu</option>
+                            <option value="Kampong Thom">Kampong Thom</option>
+                            <option value="Kampot">Kampot</option>
+                            <option value="Kandal">Kandal</option>
+                            <option value="Kep">Kep</option>
+                            <option value="Koh Kong">Koh Kong</option>
+                            <option value="Kratie">Kratie</option>
+                            <option value="Mondulkiri">Mondulkiri</option>
+                            <option value="Oddar Meanchey">Oddar Meanchey</option>
+                            <option value="Pailin">Pailin</option>
+                            <option value="Preah Sihanouk">Preah Sihanouk</option>
+                            <option value="Preah Vihear">Preah Vihear</option>
+                            <option value="Prey Veng">Prey Veng</option>
+                            <option value="Pursat">Pursat</option>
+                            <option value="Ratanakiri">Ratanakiri</option>
+                            <option value="Siem Reap">Siem Reap</option>
+                            <option value="Stung Treng">Stung Treng</option>
+                            <option value="Svay Rieng">Svay Rieng</option>
+                            <option value="Takeo">Takeo</option>
+                            <option value="Tbong Khmum">Tbong Khmum</option>
+                        </select>
+                        <x-core::icon name="ti ti-chevron-down" />
+                        <label for="cambodia_province">{{ __('Province') }}</label>
+                    </div>
+                </div> -->
+
+                @if (!in_array('state', EcommerceHelper::getHiddenFieldsAtCheckout()))
+                <div  id="province_selector" class="col-sm-6 col-12">
+                    <div class="form-group mb-3 @error('address.state') has-error @enderror">
+                        @if (EcommerceHelper::loadCountriesStatesCitiesFromPluginLocation())
+                            <div class="select--arrow form-input-wrapper">
+                                <select
+                                    class="form-control"
+                                    id="address_state"
+                                    name="address[state]"
+                                    autocomplete="state"
+                                    data-form-parent=".customer-address-payment-form"
+                                    data-type="state"
+                                    data-url="{{ route('ajax.states-by-country') }}"
+                                    required
+                                >
+                                    <option value="">{{ __('Select state...') }}</option>
+                                    @if (old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId()) || !EcommerceHelper::isUsingInMultipleCountries())
+                                        @foreach (EcommerceHelper::getAvailableStatesByCountry(old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId())) as $stateId => $stateName)
+                                            <option
+                                                value="{{ $stateId }}"
+                                                @if (old('address.state', Arr::get($sessionCheckoutData, 'state')) == $stateId) selected @endif
+                                            >{{ $stateName }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <x-core::icon name="ti ti-chevron-down" />
+                                <label for="address_state">{{ __('State') }}</label>
+                            </div>
+                        @else
+                            <div class="form-input-wrapper">
+                                <input
+                                    class="form-control"
+                                    id="address_state"
+                                    name="address[state]"
+                                    autocomplete="state"
+                                    type="text"
+                                    value="{{ old('address.state', Arr::get($sessionCheckoutData, 'state')) }}"
+                                    required
+                                >
+                                <label for="address_state">{{ __('State') }}</label>
+                            </div>
+                        @endif
+                        {!! Form::error('address.state', $errors) !!}
+                    </div>
+                </div>
+            @endif
+
+                <div id="address_input" class="form-group @error('address.address') has-error @enderror">
+                    <div class="form-input-wrapper">
+                        <input
+                            class="form-control"
+                            id="address_address"
+                            name="address[address]"
+                            autocomplete="address"
+                            type="text"
+                            value="{{ old('address.address', Arr::get($sessionCheckoutData, 'address')) }}"
+                            required
+                        >
+                        <label for="address_address">{{ __('Address') }}</label>
+                    </div>
+                    {!! Form::error('address.address', $errors) !!}
+                </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const phnomPenhRadio = document.getElementById('location_phnom_penh');
+                    const provinceRadio = document.getElementById('location_province');
+                    const provinceSelector = document.getElementById('province_selector');
+                    const addressInput = document.getElementById('address_input');
+
+                    function updateFields() {
+                        if (phnomPenhRadio.checked) {
+                            provinceSelector.classList.add('d-none');
+                            addressInput.classList.remove('d-none');
+                        } else if (provinceRadio.checked) {
+                            provinceSelector.classList.remove('d-none');
+                            addressInput.classList.add('d-none');
+                        }
+                    }
+
+                    phnomPenhRadio.addEventListener('change', updateFields);
+                    provinceRadio.addEventListener('change', updateFields);
+
+                    // Initialize on page load
+                    updateFields();
+                });
+            </script>
         @endif
 
         @if (EcommerceHelper::isZipCodeEnabled())
