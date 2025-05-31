@@ -58,7 +58,11 @@ class ProductTable extends TableAbstract
                 DeleteBulkAction::make()->permission('products.destroy'),
             ])
             ->addColumns([
-                IdColumn::make(),
+                Column::make('DT_RowIndex')
+                    ->title(trans('core/base::tables.id'))
+                    ->alignStart()
+                    ->orderable(false)
+                    ->searchable(false),
                 ImageColumn::make(),
                 Column::make('name')
                     ->title(trans('plugins/ecommerce::products.name'))
@@ -109,6 +113,7 @@ class ProductTable extends TableAbstract
     {
         $data = $this->table
             ->eloquent($this->query())
+            ->addIndexColumn() // This adds DT_RowIndex for sequential numbering
             ->editColumn('name', function (Product $item) {
                 $productType = null;
 
