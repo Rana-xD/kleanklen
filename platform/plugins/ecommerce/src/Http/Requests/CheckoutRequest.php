@@ -12,6 +12,7 @@ use Botble\Support\Http\Requests\Request;
 use Botble\Theme\Facades\Theme;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class CheckoutRequest extends Request
 {
@@ -124,6 +125,19 @@ class CheckoutRequest extends Request
         $mandatoryFields = array_keys(EcommerceHelper::getMandatoryFieldsAtCheckout());
         $nullableFields = array_diff($mandatoryFields, $availableMandatoryFields);
         $hiddenFields = EcommerceHelper::getHiddenFieldsAtCheckout();
+        
+        // Check location type to conditionally modify validation rules
+        $locationType = $this->input('address.location_type');
+        
+        // If Phnom Penh is selected, make state not required
+        if ($locationType === 'phnom_penh' && isset($rules['address.state'])) {
+            $rules = $this->removeRequired($rules, ['address.state']);
+        }
+        
+        // If Province is selected, make address not required
+        if ($locationType === 'province' && isset($rules['address.address'])) {
+            $rules = $this->removeRequired($rules, ['address.address']);
+        }
 
         if ($hiddenFields) {
             Arr::forget($rules, array_map(fn ($value) => "address.$value", $hiddenFields));

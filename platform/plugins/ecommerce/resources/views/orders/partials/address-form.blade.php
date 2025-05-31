@@ -317,6 +317,7 @@
                                     data-type="state"
                                     data-url="{{ route('ajax.states-by-country') }}"
                                     required
+                                    onchange="handleStateChange(this)"
                                 >
                                     <option value="">{{ __('Select state...') }}</option>
                                     @if (old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId()) || !EcommerceHelper::isUsingInMultipleCountries())
@@ -375,12 +376,31 @@
                     const addressInput = document.getElementById('address_input');
 
                     function updateFields() {
+                        const stateInput = document.getElementById('address_state');
+                        const addressField = document.getElementById('address_address');
+                        
                         if (phnomPenhRadio.checked) {
                             provinceSelector.classList.add('d-none');
                             addressInput.classList.remove('d-none');
+                            // Make state field not required when Phnom Penh is selected
+                            if (stateInput) {
+                                stateInput.removeAttribute('required');
+                            }
+                            // Address is required for Phnom Penh
+                            if (addressField) {
+                                addressField.setAttribute('required', 'required');
+                            }
                         } else if (provinceRadio.checked) {
                             provinceSelector.classList.remove('d-none');
                             addressInput.classList.add('d-none');
+                            // State is required for Province
+                            if (stateInput) {
+                                stateInput.setAttribute('required', 'required');
+                            }
+                            // Make address field not required when Province is selected
+                            if (addressField) {
+                                addressField.removeAttribute('required');
+                            }
                         }
                     }
 
