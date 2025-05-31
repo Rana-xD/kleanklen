@@ -16,7 +16,7 @@
     @endif
 
     @if (EcommerceHelper::isReviewEnabled() && ($product->reviews_avg || theme_option('ecommerce_hide_rating_star_when_is_zero', 'no') === 'no'))
-        <div class="tp-product-details-rating-wrapper d-flex align-items-center mb-10">
+        <div class="tp-product-details-rating-wrapper d-flex align-items-center mb-10" style="display: none !important">
             <div class="tp-product-details-rating">
                 <a href="{{ $product->url }}#product-review" data-bb-toggle="scroll-to-review">
                     @include(EcommerceHelper::viewPath('includes.rating-star'), ['avg' => $product->reviews_avg])

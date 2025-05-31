@@ -1,6 +1,6 @@
 @if (EcommerceHelper::isReviewEnabled() && ($product->reviews_avg || theme_option('ecommerce_hide_rating_star_when_is_zero', 'no') === 'no'))
     @if(theme_option('product_listing_review_style', 'default') === 'default')
-        <div class="tp-product-rating d-flex align-items-center">
+        <div class="tp-product-rating d-flex align-items-center" style="display: none !important">
             <div class="tp-product-rating-icon">
                 @include(EcommerceHelper::viewPath('includes.rating-star'), ['avg' => $product->reviews_avg])
             </div>
