@@ -317,7 +317,6 @@
                                     data-type="state"
                                     data-url="{{ route('ajax.states-by-country') }}"
                                     required
-                                    onchange="handleStateChange(this)"
                                 >
                                     <option value="">{{ __('Select state...') }}</option>
                                     @if (old('address.country', Arr::get($sessionCheckoutData, 'country') ?: EcommerceHelper::getDefaultCountryId()) || !EcommerceHelper::isUsingInMultipleCountries())
