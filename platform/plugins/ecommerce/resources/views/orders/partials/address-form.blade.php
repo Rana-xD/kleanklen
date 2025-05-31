@@ -385,6 +385,9 @@
                             // Make state field not required when Phnom Penh is selected
                             if (stateInput) {
                                 stateInput.removeAttribute('required');
+                                
+                                // Set the state field value to Phnom Penh (value 15)
+                                stateInput.value = '15';
                             }
                             // Address is required for Phnom Penh
                             if (addressField) {
@@ -396,6 +399,8 @@
                             // State is required for Province
                             if (stateInput) {
                                 stateInput.setAttribute('required', 'required');
+                                // Reset state value when switching to province
+                                stateInput.value = '';
                             }
                             // Make address field not required when Province is selected
                             if (addressField) {
@@ -403,6 +408,8 @@
                             }
                         }
                     }
+                    
+
 
                     phnomPenhRadio.addEventListener('change', updateFields);
                     provinceRadio.addEventListener('change', updateFields);
