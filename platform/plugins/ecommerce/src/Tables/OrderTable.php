@@ -51,6 +51,7 @@ class OrderTable extends TableAbstract
     {
         $data = $this->table
             ->eloquent($this->query())
+            ->addIndexColumn()
             ->editColumn('payment_status', function (Order $item) {
                 if (! is_plugin_active('payment')) {
                     return '&mdash;';
@@ -133,18 +134,27 @@ class OrderTable extends TableAbstract
     public function columns(): array
     {
         $columns = [
-            IdColumn::make(),
+            Column::make('DT_RowIndex')
+                ->title(trans('core/base::tables.id'))
+                ->alignStart()
+                ->orderable(false)
+                ->searchable(false),
+            FormattedColumn::make('created_at')
+                ->title('Order time')
+                ->renderUsing(function (FormattedColumn $column) {
+                    $date = BaseHelper::formatDate($column->getItem()->created_at);
+                    $time = $column->getItem()->created_at->format('H:i');
+                    return $date . ' - ' . $time;
+                }),
             FormattedColumn::make('user_id')
-                ->title(trans('plugins/ecommerce::order.email'))
+                ->title('User Info')
                 ->alignStart()
                 ->orderable(false)
                 ->renderUsing(function (FormattedColumn $column) {
                     $item = $column->getItem();
-
                     return sprintf(
-                        '%s <br> %s <br> %s',
+                        '%s <br> %s',
                         $item->user->name ?: $item->address->name,
-                        Html::mailto($item->user->email ?: $item->address->email, obfuscate: false),
                         $item->user->phone ?: $item->address->phone
                     );
                 }),
@@ -178,9 +188,7 @@ class OrderTable extends TableAbstract
                 ->title(trans('plugins/ecommerce::order.shipping_amount')),
         ]);
 
-        return array_merge($columns, [
-            CreatedAtColumn::make(),
-        ]);
+        return $columns;
     }
 
     public function buttons(): array
