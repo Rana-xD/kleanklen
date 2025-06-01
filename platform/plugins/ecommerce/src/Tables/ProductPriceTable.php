@@ -2,8 +2,10 @@
 
 namespace Botble\Ecommerce\Tables;
 
+use Botble\Table\Columns\Column;
 use Botble\Table\Columns\FormattedColumn;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
 
 class ProductPriceTable extends ProductBulkEditableTable
 {
@@ -14,6 +16,11 @@ class ProductPriceTable extends ProductBulkEditableTable
         $this
             ->setView('plugins/ecommerce::product-prices.index')
             ->addColumns([
+                Column::make('DT_RowIndex')
+                    ->title(trans('core/base::tables.id'))
+                    ->alignStart()
+                    ->orderable(false)
+                    ->searchable(false),
                 FormattedColumn::make('cost_per_item')
                     ->title(trans('plugins/ecommerce::products.form.cost_per_item'))
                     ->renderUsing(function (FormattedColumn $column) {
@@ -48,6 +55,30 @@ class ProductPriceTable extends ProductBulkEditableTable
                     ->width(150)
                     ->orderable(false),
             ]);
+    }
+
+    public function ajax(): JsonResponse
+    {
+        $data = $this->table
+            ->query($this->query())
+            ->addIndexColumn() // Add sequential row numbering
+            ->filter(function ($query) {
+                $keyword = $this->request()->input('search.value');
+
+                if ($keyword) {
+                    $keyword = '%' . $keyword . '%';
+
+                    $query
+                        ->where('ec_products.name', 'LIKE', $keyword)
+                        ->orWhere('ec_products.sku', 'LIKE', $keyword);
+
+                    return $query;
+                }
+
+                return $query;
+            });
+
+        return $this->toJson($data);
     }
 
     public function query()
