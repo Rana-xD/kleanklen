@@ -10,6 +10,10 @@
     }
 
     $userInfo = $order->address->id ? $order->address : $order->user;
+    
+    // Get available states to display the state name instead of ID
+    $states = EcommerceHelper::getAvailableStatesByCountry($order->address->country ?? EcommerceHelper::getDefaultCountryId());
+    $stateName = $states[$userInfo->state] ?? $userInfo->state;
 @endphp
 
 <div class="order-customer-info">
@@ -29,6 +33,13 @@
             </p>
         @endif
 
+        @if ($userInfo->state)
+            <p>
+                <span class="d-inline-block">{{ __('State') }}:</span>
+                <span class="order-customer-info-meta">{{ $stateName }}</span>
+            </p>
+        @endif
+
         @if ($userInfo->email)
             <p>
                 <span class="d-inline-block">{{ __('Email') }}:</span>
@@ -36,10 +47,17 @@
             </p>
         @endif
 
-        @if ($order->full_address && in_array('address', EcommerceHelper::getHiddenFieldsAtCheckout()) && ! empty($isShowShipping))
+        @if ($order->full_address && ($userInfo->state == '15' || $userInfo->state == 15 || $stateName == 'Phnom Penh'))
             <p>
                 <span class="d-inline-block">{{ __('Address') }}:</span>
                 <span class="order-customer-info-meta">{{ $order->full_address }}</span>
+            </p>
+        @endif
+        
+        @if ($order->description)
+            <p>
+                <span class="d-inline-block">{{ __('Note') }}:</span>
+                <span class="order-customer-info-meta">{{ $order->description }}</span>
             </p>
         @endif
     @endif
