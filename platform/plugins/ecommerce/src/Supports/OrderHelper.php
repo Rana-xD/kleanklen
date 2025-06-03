@@ -1158,11 +1158,19 @@ class OrderHelper
 
         $order->save();
 
-        $payment = Payment::query()->where('order_id', $order->getKey())->first();
+        // Check if Payment class exists before trying to use it
+        if (is_plugin_active('payment')) {
+            try {
+                $payment = Payment::query()->where('order_id', $order->getKey())->first();
 
-        if ($payment && Auth::check()) {
-            $payment->user_id = Auth::id();
-            $payment->save();
+                if ($payment && Auth::check()) {
+                    $payment->user_id = Auth::id();
+                    $payment->save();
+                }
+            } catch (\Exception $exception) {
+                // Log the exception but don't let it break the order confirmation process
+                info('Error processing payment during order confirmation: ' . $exception->getMessage());
+            }
         }
 
         event(
@@ -1179,7 +1187,21 @@ class OrderHelper
         // $mailer = EmailHandler::setModule(ECOMMERCE_MODULE_SCREEN_NAME);
         // if ($mailer->templateEnabled('order_confirm')) {
         //     $this->setEmailVariables($order);
-        //     $mailer->sendUsingTemplate('order_confirm', $order->user->email ?: $order->address->email);
+            
+        //     // Get email safely with null checks
+        //     $email = null;
+        //     if ($order->user && $order->user->email) {
+        //         $email = $order->user->email;
+        //     } elseif ($order->address && $order->address->email) {
+        //         $email = $order->address->email;
+        //     }
+            
+        //     // Only send email if we have a valid email address
+        //     if ($email) {
+        //         $mailer->sendUsingTemplate('order_confirm', $email);
+        //     } else {
+        //         info('Could not send order confirmation email for order #' . $order->id . ' - no valid email address found');
+        //     }
         // }
     }
 
@@ -1198,7 +1220,18 @@ class OrderHelper
          * @var Order $order
          */
         if (! $order->referral()->count()) {
-            $referrals = app(FootprinterInterface::class)->getFootprints();
+            $referrals = [];
+            try {
+                // Check if FootprinterInterface exists and has getFootprints method
+                if (class_exists(FootprinterInterface::class)) {
+                    $footprinter = app(FootprinterInterface::class);
+                    if (method_exists($footprinter, 'getFootprints')) {
+                        $referrals = $footprinter->getFootprints();
+                    }
+                }
+            } catch (\Exception $exception) {
+                info('Error getting footprints: ' . $exception->getMessage());
+            }
 
             if ($referrals) {
                 try {
