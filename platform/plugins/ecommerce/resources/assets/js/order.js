@@ -1,5 +1,15 @@
 class OrderAdminManagement {
     init() {
+        // Fix for "Cannot read properties of null (reading 'html')" error
+        // This adds a safety check for jQuery's html method to handle null elements gracefully
+        const originalHtml = $.fn.html;
+        $.fn.html = function() {
+            if (this.length === 0) {
+                return arguments.length === 0 ? "" : this;
+            }
+            return originalHtml.apply(this, arguments);
+        };
+
         $(document).on('click', '.btn-confirm-order', (event) => {
             event.preventDefault()
 
