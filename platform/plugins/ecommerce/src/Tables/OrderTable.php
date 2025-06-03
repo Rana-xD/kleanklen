@@ -17,6 +17,7 @@ use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\DeleteAction;
 use Botble\Table\Actions\EditAction;
+use Botble\Table\Actions\Action;
 use Botble\Table\BulkActions\DeleteBulkAction;
 use Botble\Table\Columns\Column;
 use Botble\Table\Columns\CreatedAtColumn;
@@ -42,6 +43,7 @@ class OrderTable extends TableAbstract
         $this
             ->model(Order::class)
             ->addActions([
+                // Standard edit and delete actions
                 EditAction::make()->route('orders.edit'),
                 DeleteAction::make()->route('orders.destroy'),
             ]);
@@ -195,6 +197,20 @@ class OrderTable extends TableAbstract
             Column::make('shipping_amount')
                 ->title(trans('plugins/ecommerce::order.shipping_amount')),
         ]);
+
+        // Add Quick Action column with custom buttons
+        $columns[] = FormattedColumn::make('quick_actions')
+            ->title('Quick Action')
+            ->alignCenter()
+            ->orderable(false)
+            ->searchable(false)
+            ->renderUsing(function (FormattedColumn $column) {
+                $item = $column->getItem();
+                $printInvoiceUrl = route('orders.generate-invoice', ['order' => $item->id]);
+                $markPaidUrl = route('orders.edit', ['order' => $item->id]);
+                
+                return view('plugins/ecommerce::orders.quick-actions', compact('printInvoiceUrl', 'markPaidUrl'))->render();
+            });
 
         return $columns;
     }
