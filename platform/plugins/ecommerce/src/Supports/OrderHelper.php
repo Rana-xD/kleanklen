@@ -1176,11 +1176,11 @@ class OrderHelper
             'user_id' => Auth::id() ?: 0,
         ]);
 
-        $mailer = EmailHandler::setModule(ECOMMERCE_MODULE_SCREEN_NAME);
-        if ($mailer->templateEnabled('order_confirm')) {
-            $this->setEmailVariables($order);
-            $mailer->sendUsingTemplate('order_confirm', $order->user->email ?: $order->address->email);
-        }
+        // $mailer = EmailHandler::setModule(ECOMMERCE_MODULE_SCREEN_NAME);
+        // if ($mailer->templateEnabled('order_confirm')) {
+        //     $this->setEmailVariables($order);
+        //     $mailer->sendUsingTemplate('order_confirm', $order->user->email ?: $order->address->email);
+        // }
     }
 
     public function createOrUpdateIncompleteOrder(array $data, ?Order $order = null): Order|null|false

@@ -9,6 +9,23 @@ class OrderAdminManagement {
             }
             return originalHtml.apply(this, arguments);
         };
+        
+        // Patch other jQuery methods that might cause similar issues
+        const originalText = $.fn.text;
+        $.fn.text = function() {
+            if (this.length === 0) {
+                return arguments.length === 0 ? "" : this;
+            }
+            return originalText.apply(this, arguments);
+        };
+        
+        const originalVal = $.fn.val;
+        $.fn.val = function() {
+            if (this.length === 0) {
+                return arguments.length === 0 ? "" : this;
+            }
+            return originalVal.apply(this, arguments);
+        };
 
         $(document).on('click', '.btn-confirm-order', (event) => {
             event.preventDefault()
@@ -28,12 +45,23 @@ class OrderAdminManagement {
                         Botble.showError(data.message)
                     }
                 })
+                .catch((error) => {
+                    console.error('Error confirming order:', error)
+                    Botble.showError('There was an error processing your request. Please try again.')
+                    _self.removeClass('button-loading')
+                })
         })
 
         $(document).on('click', '.btn-trigger-resend-order-confirmation-modal', (event) => {
             event.preventDefault()
-            $('#confirm-resend-confirmation-email-button').data('action', $(event.currentTarget).data('action'))
-            $('#resend-order-confirmation-email-modal').modal('show')
+            // Add try-catch to handle potential errors
+            try {
+                $('#confirm-resend-confirmation-email-button').data('action', $(event.currentTarget).data('action'))
+                $('#resend-order-confirmation-email-modal').modal('show')
+            } catch (e) {
+                console.error('Error showing confirmation modal:', e)
+                Botble.showError('There was an error processing your request. Please try again.')
+            }
         })
 
         $(document).on('click', '#confirm-resend-confirmation-email-button', (event) => {
@@ -253,6 +281,10 @@ class OrderAdminManagement {
 
                         $('.page-body').load(`${window.location.href} .page-body > *`)
                     }
+                })
+                .catch((error) => {
+                    console.error('Error updating order:', error)
+                    Botble.showError('There was an error processing your request. Please try again.')
                 })
         })
 
