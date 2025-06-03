@@ -128,6 +128,14 @@ class OrderTable extends TableAbstract
             ])
             ->where('is_finished', 1);
 
+        // Filter to show only today's orders by default
+        // Only apply this filter if no explicit date filter is set in the request
+        if (!$this->request->filled('filter_columns')) {
+            $today = now()->startOfDay()->toDateTimeString();
+            $endOfDay = now()->endOfDay()->toDateTimeString();
+            $query->whereBetween('created_at', [$today, $endOfDay]);
+        }
+
         return $this->applyScopes($query);
     }
 
@@ -213,7 +221,7 @@ class OrderTable extends TableAbstract
                 'validate' => 'required|in:' . implode(',', OrderStatusEnum::values()),
             ],
             'created_at' => [
-                'title' => trans('core/base::tables.created_at'),
+                'title' => 'Order Date',
                 'type' => 'datePicker',
             ],
         ];
