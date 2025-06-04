@@ -2,7 +2,7 @@
 
 @section('content')
     <x-plugins-ecommerce::intro
-        :title="trans('plugins/ecommerce::order.manage_orders')"
+        :title="trans('plugins/ecommerce::order.no_orders')"
         :subtitle="trans('plugins/ecommerce::order.order_intro_description')"
         :action-url="route('orders.create')"
         :action-label="trans('plugins/ecommerce::order.create_new_order')"

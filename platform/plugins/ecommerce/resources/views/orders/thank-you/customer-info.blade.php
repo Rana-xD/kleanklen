@@ -13,7 +13,13 @@
     
     // Get available states to display the state name instead of ID
     $states = EcommerceHelper::getAvailableStatesByCountry($order->address->country ?? EcommerceHelper::getDefaultCountryId());
-    $stateName = $states[$userInfo->state] ?? $userInfo->state;
+    
+    // Special handling for Phnom Penh (ID: 15)
+    if ($userInfo->state == '15' || $userInfo->state == 15) {
+        $stateName = 'Phnom Penh';
+    } else {
+        $stateName = $states[$userInfo->state] ?? $userInfo->state;
+    }
 @endphp
 
 <div class="order-customer-info">
@@ -35,7 +41,7 @@
 
         @if ($userInfo->state)
             <p>
-                <span class="d-inline-block">{{ __('State') }}:</span>
+                <span class="d-inline-block">{{ __('Location') }}:</span>
                 <span class="order-customer-info-meta">{{ $stateName }}</span>
             </p>
         @endif
@@ -47,7 +53,7 @@
             </p>
         @endif
 
-        @if ($order->full_address && ($userInfo->state == '15' || $userInfo->state == 15 || $stateName == 'Phnom Penh'))
+        @if ($order->full_address && $stateName == 'Phnom Penh')
             <p>
                 <span class="d-inline-block">{{ __('Address') }}:</span>
                 <span class="order-customer-info-meta">{{ $order->full_address }}</span>

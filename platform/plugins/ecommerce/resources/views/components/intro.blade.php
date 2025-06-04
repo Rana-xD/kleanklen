@@ -6,10 +6,7 @@
                     {{ $icon }}
                 </div>
                 <p class="empty-title">{{ $title }}</p>
-                <p class="empty-subtitle text-secondary">
-                    {{ $subtitle }}
-                </p>
-                @if (isset($actionUrl) && isset($actionLabel))
+                <!-- @if (isset($actionUrl) && isset($actionLabel))
                     <div class="empty-action">
                         <x-core::button
                             color="primary"
@@ -23,7 +20,7 @@
                     </div>
                 @endif
 
-                {!! $extra ?? '' !!}
+                {!! $extra ?? '' !!} -->
             </div>
         </div>
     </div>

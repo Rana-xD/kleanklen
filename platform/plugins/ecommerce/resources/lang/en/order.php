@@ -30,6 +30,7 @@ return [
     'payment_method' => 'Payment method',
     'payment_status_label' => 'Payment status',
     'manage_orders' => 'Manage orders',
+    'no_orders' => 'There us no orders for today yet',
     'order_intro_description' => 'Once your store has orders, this is where you will process and track those orders.',
     'create_new_order' => 'Create a new order',
     'manage_incomplete_orders' => 'Manage incomplete orders',

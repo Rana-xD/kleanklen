@@ -73,6 +73,21 @@ class OrderTable extends TableAbstract
             ->formatColumn('amount', PriceFormatter::class)
             ->editColumn('shipping_amount', function (Order $item) {
                 return $item->shipment->exists() ? $item->shipping_amount : '&mdash;';
+            })
+            ->editColumn('products', function (Order $item) {
+                $products = $item->products;
+                
+                if ($products->isEmpty()) {
+                    return '&mdash;';
+                }
+                
+                $output = '<div class="product-list">';
+                foreach ($products as $product) {
+                    $output .= '<div class="product-item">- ' . e($product->product_name) . ' (' . $product->qty . ')</div>';
+                }
+                $output .= '</div>';
+                
+                return $output;
             });
 
         if (EcommerceHelper::isTaxEnabled()) {
@@ -162,16 +177,87 @@ class OrderTable extends TableAbstract
                 ->orderable(false)
                 ->renderUsing(function (FormattedColumn $column) {
                     $item = $column->getItem();
-                    return sprintf(
-                        '%s <br> %s',
-                        $item->user->name ?: $item->address->name,
-                        $item->user->phone ?: $item->address->phone
-                    );
+                    $name = $item->user->name ?: $item->address->name;
+                    $phone = $item->user->phone ?: $item->address->phone;
+                    $state = $item->address->state ?? '';
+                    $address = $item->address->address ?? '';
+                    
+                    // Get state name if it's a numeric ID
+                    $stateName = $state;
+                    $isPhomPenh = ($state == '15' || $state == 15 || $state === 'Phnom Penh');
+                    
+                    if ($isPhomPenh) {
+                        $stateName = 'Phnom Penh';
+                    } else {
+                        // Try to get state name from available states
+                        $states = EcommerceHelper::getAvailableStatesByCountry($item->address->country ?? EcommerceHelper::getDefaultCountryId());
+                        $stateName = $states[$state] ?? $state;
+                        // Double-check if the resolved state name is Phnom Penh
+                        if ($stateName === 'Phnom Penh') {
+                            $isPhomPenh = true;
+                        }
+                    }
+                    
+                    // Improved formatting with styling
+                    $userInfo = '<div class="user-info-container">';
+                    $userInfo .= '<div class="user-info-item"><strong>Name:</strong> ' . $name . '</div>';
+                    $userInfo .= '<div class="user-info-item"><strong>Phone:</strong> ' . $phone . '</div>';
+                    
+                    if ($state) {
+                        $userInfo .= '<div class="user-info-item"><strong>Location:</strong> ' . $stateName . '</div>';
+                        
+                        // REVERSED: Only show address if state IS Phnom Penh
+                        if ($isPhomPenh && $address) {
+                            $userInfo .= '<div class="user-info-item"><strong>Address:</strong> ' . $address . '</div>';
+                        }
+                    } elseif ($address) {
+                        // If no state but address exists, show address
+                        $userInfo .= '<div class="user-info-item"><strong>Address:</strong> ' . $address . '</div>';
+                    }
+                    
+                    $userInfo .= '</div>';
+                    
+                    return $userInfo;
+                }),
+            FormattedColumn::make('products')
+                ->title('Product')
+                ->alignStart()
+                ->orderable(false)
+                ->renderUsing(function (FormattedColumn $column) {
+                    $item = $column->getItem();
+                    $products = $item->products;
+                    
+                    if ($products->isEmpty()) {
+                        return '&mdash;';
+                    }
+                    
+                    $output = '<div class="product-list" style="max-width: 250px;">';
+                    foreach ($products as $index => $product) {
+                        $productName = e($product->product_name);
+                        $qty = $product->qty;
+                        
+                        // Add a nice style with product name and quantity
+                        $output .= '<div class="product-item" style="margin-bottom: 5px; padding: 3px 0;">';
+                        $output .= '<span style="font-weight: 500;">' . $productName . '</span>';
+                        $output .= '<span style="background-color: #f0f0f0; border-radius: 10px; padding: 2px 8px; margin-left: 5px; font-size: 12px;">' . $qty . '</span>';
+                        $output .= '</div>';
+                        
+                        // Add a separator if not the last item
+                        if ($index < count($products) - 1) {
+                            $output .= '<div style="border-bottom: 1px dashed #eee; margin: 5px 0;"></div>';
+                        }
+                    }
+                    $output .= '</div>';
+                    
+                    return $output;
                 }),
             Column::formatted('amount')
                 ->title(trans('plugins/ecommerce::order.amount')),
         ];
 
+        // Payment method and payment status columns commented out as requested
+        // Can be uncommented in the future if needed
+        /*
         if (is_plugin_active('payment')) {
             $columns = array_merge($columns, [
                 Column::make('payment_method')
@@ -183,6 +269,7 @@ class OrderTable extends TableAbstract
                     ->title(trans('plugins/ecommerce::order.payment_status_label')),
             ]);
         }
+        */
 
         $columns[] = StatusColumn::make()->alignStart();
 
@@ -193,10 +280,7 @@ class OrderTable extends TableAbstract
             ]);
         }
 
-        $columns = array_merge($columns, [
-            Column::make('shipping_amount')
-                ->title(trans('plugins/ecommerce::order.shipping_amount')),
-        ]);
+        // Shipping amount column removed as requested
 
         // Add Quick Action column with custom buttons
         $columns[] = FormattedColumn::make('quick_actions')
