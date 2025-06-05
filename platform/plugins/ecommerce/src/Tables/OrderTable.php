@@ -142,6 +142,7 @@ class OrderTable extends TableAbstract
                 'tax_amount',
                 'shipping_amount',
                 'payment_id',
+                'description',
             ])
             ->where('is_finished', 1);
 
@@ -235,11 +236,18 @@ class OrderTable extends TableAbstract
                     foreach ($products as $index => $product) {
                         $productName = e($product->product_name);
                         $qty = $product->qty;
+                        $barcode = $product->product->barcode ?? '';
                         
                         // Add a nice style with product name and quantity
                         $output .= '<div class="product-item" style="margin-bottom: 5px; padding: 3px 0;">';
                         $output .= '<span style="font-weight: 500;">' . $productName . '</span>';
                         $output .= '<span style="background-color: #f0f0f0; border-radius: 10px; padding: 2px 8px; margin-left: 5px; font-size: 12px;">' . $qty . '</span>';
+                        
+                        // Display barcode if available
+                        if ($barcode) {
+                            $output .= '<div style="font-size: 12px; color: #666; margin-top: 3px;"><strong>Barcode:</strong> ' . $barcode . '</div>';
+                        }
+                        
                         $output .= '</div>';
                         
                         // Add a separator if not the last item
@@ -253,6 +261,25 @@ class OrderTable extends TableAbstract
                 }),
             Column::formatted('amount')
                 ->title(trans('plugins/ecommerce::order.amount')),
+            FormattedColumn::make('description')
+                ->title('Notes')
+                ->alignStart()
+                ->orderable(false)
+                ->renderUsing(function (FormattedColumn $column) {
+                    $item = $column->getItem();
+                    $notes = $item->description;
+                    
+                    if (empty($notes)) {
+                        return '&mdash;';
+                    }
+                    
+                    // Truncate text if over 100 characters
+                    if (strlen($notes) > 100) {
+                        $notes = substr($notes, 0, 100) . '...';
+                    }
+                    
+                    return '<div style="max-width: 250px; white-space: pre-wrap;">' . e($notes) . '</div>';
+                }),
         ];
 
         // Payment method and payment status columns commented out as requested
