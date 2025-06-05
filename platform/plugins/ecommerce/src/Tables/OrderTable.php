@@ -318,9 +318,54 @@ class OrderTable extends TableAbstract
             ->renderUsing(function (FormattedColumn $column) {
                 $item = $column->getItem();
                 $printInvoiceUrl = route('orders.generate-invoice', ['order' => $item->id]);
-                $markPaidUrl = route('orders.edit', ['order' => $item->id]);
                 
-                return view('plugins/ecommerce::orders.quick-actions', compact('printInvoiceUrl', 'markPaidUrl'))->render();
+                $output = '<div class="table-actions" style="display: flex; gap: 8px;">';
+                
+                // Print Invoice button
+                $output .= '<a href="' . $printInvoiceUrl . '" class="btn btn-icon btn-sm btn-info" data-bs-toggle="tooltip" data-bs-original-title="Print Invoice">';
+                $output .= '<svg class="icon svg-icon-ti-ti-printer" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+                $output .= '<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>';
+                $output .= '<path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"></path>';
+                $output .= '<path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"></path>';
+                $output .= '<path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"></path>';
+                $output .= '</svg></a>';
+                
+                // Only show action buttons if the order is not completed
+                if ($item->status != \Botble\Ecommerce\Enums\OrderStatusEnum::COMPLETED) {
+                    // Mark as Paid button (confirms order) - only for pending orders
+                    if (!$item->is_confirmed && $item->status != \Botble\Ecommerce\Enums\OrderStatusEnum::PROCESSING) {
+                        $confirmUrl = route('orders.confirm');
+                        $output .= '<form method="post" action="' . $confirmUrl . '" style="display:inline-block;">';
+                        $output .= csrf_field();
+                        $output .= '<input type="hidden" name="order_id" value="' . $item->id . '">';
+                        $output .= '<button type="submit" class="btn btn-icon btn-sm btn-success btn-confirm-order" data-bs-toggle="tooltip" data-bs-original-title="Mark Paid">';
+                        $output .= '<svg class="icon svg-icon-ti-ti-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+                        $output .= '<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>';
+                        $output .= '<path d="M5 12l5 5l10 -10"></path>';
+                        $output .= '</svg>';
+                        $output .= '</button>';
+                        $output .= '</form>';
+                    }
+                    
+                    // Mark as Complete button - only for processing orders
+                    if ($item->status == \Botble\Ecommerce\Enums\OrderStatusEnum::PROCESSING) {
+                        $completeUrl = route('orders.complete-order', $item->id);
+                        $output .= '<form method="post" action="' . $completeUrl . '" style="display:inline-block;">';
+                        $output .= csrf_field();
+                        $output .= '<button type="submit" class="btn btn-icon btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-original-title="Mark Complete">';
+                        $output .= '<svg class="icon svg-icon-ti-ti-check-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+                        $output .= '<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>';
+                        $output .= '<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>';
+                        $output .= '<path d="M9 12l2 2l4 -4"></path>';
+                        $output .= '</svg>';
+                        $output .= '</button>';
+                        $output .= '</form>';
+                    }
+                }
+                
+                $output .= '</div>';
+                
+                return $output;
             });
 
         return $columns;
@@ -413,8 +458,32 @@ class OrderTable extends TableAbstract
         if ($this->isEmpty()) {
             return view('plugins/ecommerce::orders.intro');
         }
+        
+        if ($this->query()->getModel()->getTable() === 'ec_orders') {
+            $this->setOption('id', 'table-orders');
+        }
+        
+        // Add the confirmation modal for payment
+        if (!$this->hasShortcode('confirm-payment-modal')) {
+            add_filter(BASE_FILTER_AFTER_SETTING_CONTENT, function ($html) {
+                return $html . view('plugins/ecommerce::orders.partials.mark-as-paid-modal')->render();
+            }, 120);
+            
+            $this->hasShortcode('confirm-payment-modal', true);
+        }
 
         return parent::renderTable($data, $mergeData);
+    }
+    
+    protected function hasShortcode($key, $value = null)
+    {
+        static $data = [];
+        
+        if ($value !== null) {
+            $data[$key] = $value;
+        }
+        
+        return $data[$key] ?? false;
     }
 
     public function getDefaultButtons(): array

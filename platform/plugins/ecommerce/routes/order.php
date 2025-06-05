@@ -75,6 +75,12 @@ AdminHelper::registerRoutes(function (): void {
                 'uses' => 'OrderController@postConfirmPayment',
                 'permission' => 'orders.edit',
             ])->wherePrimaryKey();
+            
+            Route::post('complete-order/{order}', [
+                'as' => 'complete-order',
+                'uses' => 'OrderController@postCompleteOrder',
+                'permission' => 'orders.edit',
+            ])->wherePrimaryKey();
 
             Route::get('get-shipment-form/{order}', [
                 'as' => 'get-shipment-form',

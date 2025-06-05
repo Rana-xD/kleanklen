@@ -49,6 +49,11 @@ return [
     'system' => 'System',
     'new_order_from' => 'New order :order_id from :customer',
     'confirmation_email_was_sent_to_customer' => 'The email confirmation was sent to customer',
+    'mark_as_completed' => [
+        'success' => 'Order marked as completed successfully!',
+        'invalid_order' => 'The order cannot be marked as completed. It must be in processing status.',
+        'history' => 'Order marked as completed by :admin at :time',
+    ],
     'create_order_from_payment_page' => 'Order was created from checkout page',
     'create_order_from_admin_page' => 'Order was created from admin page',
     'order_was_verified_by' => 'Order was verified by %user_name%',

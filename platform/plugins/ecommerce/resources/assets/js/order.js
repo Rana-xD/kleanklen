@@ -27,26 +27,52 @@ class OrderAdminManagement {
             return originalVal.apply(this, arguments);
         };
 
-        $(document).on('click', '.btn-confirm-order', (event) => {
+        // Generic form submission handler for both Mark as Paid and Mark as Complete buttons
+        $(document).on('click', '.btn-confirm-order, .btn-icon[type="submit"]', (event) => {
             event.preventDefault()
 
             const _self = $(event.currentTarget)
-
+            
+            // Handle table Mark as Paid button with data attributes
+            if (_self.data('order-id')) {
+                const orderId = _self.data('order-id')
+                const action = _self.data('action')
+                
+                $httpClient
+                    .make()
+                    .withButtonLoading(_self)
+                    .post(action, { order_id: orderId })
+                    .then(({ data }) => {
+                        if (!data.error) {
+                            Botble.showSuccess(data.message)
+                            window.location.reload()
+                        } else {
+                            Botble.showError(data.message)
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error processing order action:', error)
+                        Botble.showError('There was an error processing your request. Please try again.')
+                        _self.removeClass('button-loading')
+                    })
+                return
+            }
+            
+            // Handle form-based buttons (both Mark as Paid and Mark as Complete)
             $httpClient
                 .make()
                 .withButtonLoading(_self)
                 .post(_self.closest('form').prop('action'), _self.closest('form').serialize())
                 .then(({ data }) => {
                     if (!data.error) {
-                        $('#main-order-content').load(`${window.location.href} #main-order-content > *`)
-                        _self.closest('div').remove()
                         Botble.showSuccess(data.message)
+                        window.location.reload()
                     } else {
                         Botble.showError(data.message)
                     }
                 })
                 .catch((error) => {
-                    console.error('Error confirming order:', error)
+                    console.error('Error processing order action:', error)
                     Botble.showError('There was an error processing your request. Please try again.')
                     _self.removeClass('button-loading')
                 })

@@ -546,6 +546,27 @@ class OrderController extends BaseController
             ->httpResponse()
             ->setMessage(trans('plugins/ecommerce::order.confirm_payment_success'));
     }
+    
+    public function postCompleteOrder(Order $order, Request $request)
+    {
+        // Log the current order status for debugging
+        info('Order ID: ' . $order->id . ', Status: ' . $order->status . ', Status Value: ' . $order->status->getValue());
+        
+        if ($order->status->getValue() === OrderStatusEnum::PROCESSING) {
+            info('Processing order completion for order: ' . $order->id);
+            OrderHelper::setOrderCompleted($order->id, $request, Auth::id());
+            
+            return $this
+                ->httpResponse()
+                ->setMessage(trans('plugins/ecommerce::order.mark_as_completed.success'));
+        }
+        
+        info('Invalid order status for completion: ' . $order->status . ', Expected: ' . OrderStatusEnum::PROCESSING);
+        return $this
+            ->httpResponse()
+            ->setError()
+            ->setMessage(trans('plugins/ecommerce::order.mark_as_completed.invalid_order'));
+    }
 
     public function postRefund(Order $order, RefundRequest $request)
     {
