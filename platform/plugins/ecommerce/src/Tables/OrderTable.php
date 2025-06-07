@@ -455,9 +455,9 @@ class OrderTable extends TableAbstract
 
     public function renderTable($data = [], $mergeData = []): View|Factory|Response
     {
-        if ($this->isEmpty()) {
-            return view('plugins/ecommerce::orders.intro');
-        }
+        // if ($this->isEmpty()) {
+        //     return view('plugins/ecommerce::orders.intro');
+        // }
         
         if ($this->query()->getModel()->getTable() === 'ec_orders') {
             $this->setOption('id', 'table-orders');
