@@ -50,9 +50,6 @@ class User extends BaseModel implements
 
     protected $fillable = [
         'username',
-        'email',
-        'first_name',
-        'last_name',
         'password',
         'avatar_id',
         'permissions',
@@ -66,11 +63,8 @@ class User extends BaseModel implements
 
     protected $casts = [
         'password' => 'hashed',
-        'email_verified_at' => 'datetime',
         'permissions' => 'json',
         'username' => SafeContent::class,
-        'first_name' => SafeContent::class,
-        'last_name' => SafeContent::class,
         'last_login' => 'datetime',
     ];
 
@@ -86,26 +80,12 @@ class User extends BaseModel implements
             ->withTimestamps();
     }
 
-    protected function firstName(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => ucfirst((string) $value),
-            set: fn ($value) => ucfirst((string) $value),
-        );
-    }
 
-    protected function lastName(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => ucfirst((string) $value),
-            set: fn ($value) => ucfirst((string) $value),
-        );
-    }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->first_name . ' ' . $this->last_name,
+            get: fn () => $this->username,
         );
     }
 

@@ -25,22 +25,6 @@ class UserForm extends FormAbstract
             ->setValidatorClass(CreateUserRequest::class)
             ->columns()
             ->add(
-                'first_name',
-                TextField::class,
-                TextFieldOption::make()
-                    ->label(trans('core/acl::users.info.first_name'))
-                    ->required()
-                    ->maxLength(30)
-            )
-            ->add(
-                'last_name',
-                TextField::class,
-                TextFieldOption::make()
-                    ->label(trans('core/acl::users.info.last_name'))
-                    ->required()
-                    ->maxLength(30)
-            )
-            ->add(
                 'username',
                 TextField::class,
                 TextFieldOption::make()
@@ -48,7 +32,6 @@ class UserForm extends FormAbstract
                     ->required()
                     ->maxLength(30)
             )
-            ->add('email', TextField::class, EmailFieldOption::make()->required())
             ->add(
                 'password',
                 'password',

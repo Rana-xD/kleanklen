@@ -23,40 +23,12 @@
         @csrf
         <div class="row">
             <x-core::form.text-input
-                wrapper-class="col-md-6"
-                id="first_name"
-                name="first_name"
-                :label="trans('packages/installer::installer.createAccount.form.first_name')"
-                :value="old('first_name')"
-                :placeholder="trans('packages/installer::installer.createAccount.form.first_name')"
-            />
-
-            <x-core::form.text-input
-                wrapper-class="col-md-6"
-                id="last_name"
-                name="last_name"
-                :label="trans('packages/installer::installer.createAccount.form.last_name')"
-                :value="old('last_name')"
-                :placeholder="trans('packages/installer::installer.createAccount.form.last_name')"
-            />
-
-            <x-core::form.text-input
-                wrapper-class="col-md-6"
+                wrapper-class="col-md-12"
                 id="username"
                 name="username"
                 :label="trans('packages/installer::installer.createAccount.form.username')"
                 :value="old('username')"
                 :placeholder="trans('packages/installer::installer.createAccount.form.username')"
-            />
-
-            <x-core::form.text-input
-                wrapper-class="col-md-6"
-                id="email"
-                name="email"
-                type="email"
-                :label="trans('packages/installer::installer.createAccount.form.email')"
-                :value="old('email')"
-                :placeholder="trans('packages/installer::installer.createAccount.form.email')"
             />
 
             <x-core::form.text-input

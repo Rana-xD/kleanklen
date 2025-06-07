@@ -34,10 +34,7 @@ class AccountController extends BaseController
             $user = new User();
             $user->fill(
                 $request->only([
-                    'first_name',
-                    'last_name',
                     'username',
-                    'email',
                 ])
             );
             $user->super_user = 1;
