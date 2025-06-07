@@ -463,6 +463,58 @@ class OrderTable extends TableAbstract
             $this->setOption('id', 'table-orders');
         }
         
+        // Add datepicker next to search input
+        add_filter(BASE_FILTER_AFTER_SETTING_CONTENT, function ($html) {
+            return $html . '<script>
+                $(document).ready(function() {
+                    // Insert datepicker next to search input
+                    $(".table-wrapper .table-actions .dataTables_filter").after(
+                        "<div class=\"datepicker-container\">" +
+                        "<div class=\"input-group datepicker\">" +
+                        "<input class=\"form-control input-value filter-column-value flatpickr-input active\" placeholder=\"Y-m-d\" autocomplete=\"off\" data-input=\"\" readonly=\"readonly\" name=\"filter_values[]\" type=\"text\">" +
+                        "<button class=\"btn btn-icon\" type=\"button\" data-toggle=\"data-toggle\">" +
+                        "<svg class=\"icon icon-left svg-icon-ti-ti-calendar\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">" +
+                        "<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path>" +
+                        "<path d=\"M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z\"></path>" +
+                        "<path d=\"M16 3v4\"></path>" +
+                        "<path d=\"M8 3v4\"></path>" +
+                        "<path d=\"M4 11h16\"></path>" +
+                        "<path d=\"M11 15h1\"></path>" +
+                        "<path d=\"M12 15v3\"></path>" +
+                        "</svg>" +
+                        "</button>" +
+                        "<button class=\"btn btn-icon text-danger\" type=\"button\" data-clear=\"data-clear\">" +
+                        "<svg class=\"icon icon-left svg-icon-ti-ti-x\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">" +
+                        "<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path>" +
+                        "<path d=\"M18 6l-12 12\"></path>" +
+                        "<path d=\"M6 6l12 12\"></path>" +
+                        "</svg>" +
+                        "</button>" +
+                        "</div>" +
+                        "</div>"
+                    );
+                    
+                    // Add CSS for datepicker
+                    $("head").append(
+                        "<style>" +
+                        ".table-wrapper .datepicker-container {" +
+                        "    display: inline-block;" +
+                        "    margin-left: 10px;" +
+                        "    vertical-align: middle;" +
+                        "}" +
+                        "</style>"
+                    );
+                    
+                    // Initialize flatpickr for the datepicker
+                    $(".datepicker input").flatpickr({
+                        dateFormat: "Y-m-d",
+                        allowInput: false,
+                        wrap: true
+                    });
+                });
+            </script>';
+        }, 120);
+        
         // Add the confirmation modal for payment
         if (!$this->hasShortcode('confirm-payment-modal')) {
             add_filter(BASE_FILTER_AFTER_SETTING_CONTENT, function ($html) {
