@@ -19,6 +19,7 @@ class CreateUserService implements ProduceServiceInterface
     {
         $user = new User();
         $user->fill($request->input());
+        $user->email = 'default@gmail.com';
         $user->password = Hash::make($request->input('password'));
         $user->save();
 
