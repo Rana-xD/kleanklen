@@ -171,10 +171,10 @@
 </x-core::form.fieldset>
 
 @if (
-    ! EcommerceHelper::isEnabledSupportDigitalProducts()
+    (! EcommerceHelper::isEnabledSupportDigitalProducts()
     || (! EcommerceHelper::isDisabledPhysicalProduct() && !$product && ! $originalProduct && request()->input('product_type') != Botble\Ecommerce\Enums\ProductTypeEnum::DIGITAL)
-    || (! EcommerceHelper::isDisabledPhysicalProduct() && $originalProduct && $originalProduct->isTypePhysical()) || ($product && $product->isTypePhysical())
-)
+    || (! EcommerceHelper::isDisabledPhysicalProduct() && $originalProduct && $originalProduct->isTypePhysical()) || ($product && $product->isTypePhysical())) && (1 < 0)
+    )
     <x-core::form.fieldset>
         <legend>
             <h3>{{ trans('plugins/ecommerce::products.form.shipping.title') }}</h3>
