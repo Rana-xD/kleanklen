@@ -79,14 +79,6 @@ class ProductForm extends FormAbstract
             ->setValidatorClass(ProductRequest::class)
             ->setFormOption('files', true)
             ->add('name', TextField::class, NameFieldOption::make()->required())
-            ->add(
-                'description',
-                EditorField::class,
-                EditorFieldOption::make()
-                    ->label(trans('core/base::forms.description'))
-                    ->placeholder(trans('core/base::forms.description_placeholder'))
-            )
-            ->add('content', EditorField::class, ContentFieldOption::make()->allowedShortcodes())
             ->add('images[]', MediaImagesField::class, [
                 'label' => trans('plugins/ecommerce::products.form.image'),
                 'values' => $productId ? $this->getModel()->images : [],
@@ -143,6 +135,21 @@ class ProductForm extends FormAbstract
                 MediaImageFieldOption::make()
                     ->label(trans('plugins/ecommerce::products.form.featured_image'))
             )
+            ->add(
+                'slug',
+                TextField::class,
+                NameFieldOption::make()
+                    ->label(trans('core/base::forms.permalink'))
+                    ->placeholder(trans('core/base::forms.permalink_placeholder'))
+            )
+            ->add(
+                'description',
+                EditorField::class,
+                EditorFieldOption::make()
+                    ->label(trans('core/base::forms.description'))
+                    ->placeholder(trans('core/base::forms.description_placeholder'))
+            )
+            ->add('content', EditorField::class, ContentFieldOption::make()->allowedShortcodes())
             ->when($productCollections, function () use ($productCollections): void {
                 $selectedProductCollections = [];
 
