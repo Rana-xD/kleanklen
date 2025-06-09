@@ -6,6 +6,7 @@ use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Base\Events\CreatedContentEvent;
 use Botble\Base\Facades\Assets;
 use Botble\Base\Supports\Breadcrumb;
+use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Ecommerce\Enums\ProductTypeEnum;
 use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Forms\ProductForm;
@@ -258,5 +259,31 @@ class ProductController extends BaseController
         return $this
             ->httpResponse()
             ->withUpdatedSuccessMessage();
+    }
+    
+    /**
+     * Toggle product status between Published and Draft
+     *
+     * @param int $id
+     * @param Request $request
+     * @return mixed
+     */
+    public function toggleStatus($id, Request $request)
+    {
+        $product = Product::findOrFail($id);
+        
+        // Toggle status between Published and Draft
+        $newStatus = $product->status == BaseStatusEnum::PUBLISHED ? BaseStatusEnum::DRAFT : BaseStatusEnum::PUBLISHED;
+        $product->status = $newStatus;
+        $product->save();
+        
+        // Update status for all variations of this product
+        $relatedProductIds = $product->variations()->pluck('product_id')->all();
+        Product::query()->whereIn('id', $relatedProductIds)->update(['status' => $newStatus]);
+        
+        return $this
+            ->httpResponse()
+            ->setMessage(trans('core/base::notices.update_success_message'))
+            ->setData(['status' => $newStatus]);
     }
 }

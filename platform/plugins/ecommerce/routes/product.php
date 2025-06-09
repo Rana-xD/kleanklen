@@ -124,6 +124,12 @@ AdminHelper::registerRoutes(function (): void {
                 'uses' => 'ProductController@setDefaultProductVariation',
                 'permission' => 'products.edit',
             ])->wherePrimaryKey();
+
+            Route::get('toggle-status/{id}', [
+                'as' => 'toggle-status',
+                'uses' => 'ProductController@toggleStatus',
+                'permission' => 'products.edit',
+            ])->wherePrimaryKey();
         });
     });
 
