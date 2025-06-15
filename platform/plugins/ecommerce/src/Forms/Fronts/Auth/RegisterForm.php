@@ -48,18 +48,18 @@ class RegisterForm extends AuthForm
                     ->placeholder(__('Your full name'))
                     ->icon('ti ti-user')
             )
-            ->add(
-                'email',
-                EmailField::class,
-                EmailFieldOption::make()
-                    ->label(__('Email'))
-                    ->when(EcommerceHelper::isLoginUsingPhone(), function (EmailFieldOption $fieldOption): void {
-                        $fieldOption->label(__('Email (optional)'));
-                    })
-                    ->placeholder(__('Your email'))
-                    ->icon('ti ti-mail')
-                    ->addAttribute('autocomplete', 'email')
-            )
+            // ->add(
+            //     'email',
+            //     EmailField::class,
+            //     EmailFieldOption::make()
+            //         ->label(__('Email'))
+            //         ->when(EcommerceHelper::isLoginUsingPhone(), function (EmailFieldOption $fieldOption): void {
+            //             $fieldOption->label(__('Email (optional)'));
+            //         })
+            //         ->placeholder(__('Your email'))
+            //         ->icon('ti ti-mail')
+            //         ->addAttribute('autocomplete', 'email')
+            // )
             ->when(get_ecommerce_setting('enabled_phone_field_in_registration_form', true), static function (FormAbstract $form): void {
                 $form
                     ->add(

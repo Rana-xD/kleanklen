@@ -94,9 +94,11 @@ class RegisterController extends BaseController
 
     protected function create(array $data)
     {
+        $email = BaseHelper::clean($data['email'] ?? '');
+        
         return Customer::query()->create([
             'name' => BaseHelper::clean($data['name']),
-            'email' => BaseHelper::clean($data['email']),
+            'email' => $email ?: null, // Convert empty string to null to avoid unique constraint issues
             'phone' => BaseHelper::clean($data['phone'] ?? null),
             'password' => Hash::make($data['password']),
         ]);
