@@ -17,6 +17,7 @@ use Botble\Ecommerce\Models\ProductFile;
 use Botble\Media\Facades\RvMedia;
 use Botble\Media\Models\MediaFile;
 use Botble\Media\Services\UploadsManager;
+use Botble\Slug\Facades\SlugHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -162,6 +163,13 @@ class StoreProductService
         $product->specificationAttributes()->sync($specificationAttributes);
 
         event(new ProductQuantityUpdatedEvent($product));
+
+        // Create or update slug for the product
+        if ($request->input('slug')) {
+            SlugHelper::createSlug($product, $request->input('slug'));
+        } else {
+            SlugHelper::createSlug($product);
+        }
 
         return $product;
     }
