@@ -48,6 +48,7 @@ class CustomerTable extends TableAbstract
     {
         $data = $this->table
             ->eloquent($this->query())
+            ->addIndexColumn()
             ->editColumn('avatar', function (Customer $item) {
                 if ($this->isExportingToCSV() || $this->isExportingToExcel()) {
                     return $item->avatar_url;
@@ -85,7 +86,11 @@ class CustomerTable extends TableAbstract
     public function columns(): array
     {
         $columns = [
-            IdColumn::make(),
+            Column::make('DT_RowIndex')
+                ->title(trans('core/base::tables.id'))
+                ->alignStart()
+                ->orderable(false)
+                ->searchable(false),
             Column::make('avatar')
                 ->title(trans('plugins/ecommerce::customer.avatar')),
             NameColumn::make()->route('customers.edit'),
