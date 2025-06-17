@@ -126,6 +126,14 @@ class CustomerForm extends FormAbstract
                         'wrap' => true,
                         'has_table' => true,
                     ],
+                    'orders' => [
+                        'title' => trans('plugins/ecommerce::order.orders'),
+                        'content' => view('plugins/ecommerce::customers.orders.orders', [
+                            'orders' => $model->orders()->latest()->get(),
+                        ])->render(),
+                        'wrap' => true,
+                        'has_table' => true,
+                    ],
                 ];
 
                 if (is_plugin_active('payment')) {
