@@ -1,9 +1,10 @@
 <div class="number-items-available">
     @if ($product->stock_status == 'on_backorder')
         <p class="text-warning fw-medium fs-6">{{ __('Warning: This product is on backorder and may take longer to ship.') }}</p>
-    @elseif ($product->isOutOfStock())
+    @else ($product->isOutOfStock())
         <span class="text-danger">{{ __('Out of stock') }}</span>
-    @else
+    @endif
+    <!-- @else
         @if (! $productVariation)
             <span class="text-danger">{{ __('Not available') }}
         @else
@@ -27,5 +28,5 @@
                 </span>
            @endif
        @endif
-    @endif
+    @endif -->
 </div>

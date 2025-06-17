@@ -1,7 +1,7 @@
 <div class="number-items-available">
     @if ($product->isOutOfStock())
         <span class="text-danger">{{ __('Out of stock') }}</span>
-    @else
+    <!-- @else
         @if (! $productVariation)
             <span class="text-danger">{{ __('Not available') }}
         @else
@@ -22,6 +22,6 @@
                     @endif
                 </span>
            @endif
-       @endif
+       @endif -->
     @endif
 </div>
