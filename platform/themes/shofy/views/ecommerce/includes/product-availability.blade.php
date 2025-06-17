@@ -6,9 +6,9 @@
     @else
          <p></p>
     @endif
-    <!-- @else
+    {{-- Commented out section
         @if (! $productVariation)
-            <span class="text-danger">{{ __('Not available') }}
+            <span class="text-danger">{{ __('Not available') }}</span>
         @else
             @if ($productVariation->stock_status == 'on_backorder')
                 <p class="text-warning fw-medium fs-6">{{ __('Warning: This product is on backorder and may take longer to ship.') }}</p>
@@ -30,5 +30,5 @@
                 </span>
            @endif
        @endif
-    @endif -->
+    --}
 </div>
