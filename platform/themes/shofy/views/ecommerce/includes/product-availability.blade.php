@@ -3,6 +3,8 @@
         <p class="text-warning fw-medium fs-6">{{ __('Warning: This product is on backorder and may take longer to ship.') }}</p>
     @elseif ($product->isOutOfStock())
         <span class="text-danger">{{ __('Out of stock') }}</span>
+    @else
+         <p></p>
     @endif
     <!-- @else
         @if (! $productVariation)
