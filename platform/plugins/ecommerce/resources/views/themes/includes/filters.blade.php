@@ -18,7 +18,7 @@
                 @include(EcommerceHelper::viewPath('includes.filters.brands'))
             @endif
 
-            @if (EcommerceHelper::isEnabledFilterProductsByTags())
+            <!-- @if (EcommerceHelper::isEnabledFilterProductsByTags())
                 @include(EcommerceHelper::viewPath('includes.filters.tags'))
             @endif
 
@@ -28,7 +28,7 @@
 
             @if (EcommerceHelper::isEnabledFilterProductsByAttributes())
                 @include(EcommerceHelper::viewPath('includes.filters.attributes', ['view' => $view ?? null]))
-            @endif
+            @endif -->
 
             {!! apply_filters('theme_ecommerce_products_filter_after', null, $dataForFilter) !!}
         </form>
