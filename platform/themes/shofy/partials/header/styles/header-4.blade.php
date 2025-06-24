@@ -12,21 +12,12 @@
                     <div class="col-xl-2 col-lg-2 col-6">
                         {!! Theme::partial('header.logo', ['hasLogoLight' => true]) !!}
                     </div>
-                    <div class="col-xl-8 col-lg-8 d-none d-lg-block">
-                        <div class="main-menu menu-style-3 menu-style-4 p-relative">
+                    <div class="col-xxl-4 col-xl-6 d-none d-xl-block">
+                        <div class="main-menu">
                             <nav class="tp-main-menu-content">
                                 {!! Menu::renderMenuLocation('main-menu', ['view' => 'main-menu']) !!}
                             </nav>
                         </div>
-                        @if(is_plugin_active('ecommerce'))
-                            <div class="tp-category-menu-wrapper d-none">
-                                <nav class="tp-category-menu-content">
-                                    <ul>
-                                        {!! Theme::partial('header.categories-dropdown') !!}
-                                    </ul>
-                                </nav>
-                            </div>
-                        @endif
                     </div>
                     <div class="col-xl-2 col-lg-2 col-6">
                         {!! Theme::partial('header.actions', ['class' => 'justify-content-end ml-50', 'showSearchButton' => true]) !!}

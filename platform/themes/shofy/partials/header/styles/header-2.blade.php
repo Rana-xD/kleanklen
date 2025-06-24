@@ -16,7 +16,7 @@
                         <div class="col-xl-5 d-none d-xl-block">
                             <div class="main-menu menu-style-2">
                                 <nav class="tp-main-menu-content">
-                                    {!! Menu::renderMenuLocation('main-menu', ['view' => 'main-menu']) !!}
+                                    {!! Theme::partial('brands-menu') !!}
                                 </nav>
                             </div>
                             @if(is_plugin_active('ecommerce'))
