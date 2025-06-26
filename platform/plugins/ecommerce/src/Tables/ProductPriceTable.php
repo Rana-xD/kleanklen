@@ -16,11 +16,6 @@ class ProductPriceTable extends ProductBulkEditableTable
         $this
             ->setView('plugins/ecommerce::product-prices.index')
             ->addColumns([
-                Column::make('DT_RowIndex')
-                    ->title(trans('core/base::tables.id'))
-                    ->alignStart()
-                    ->orderable(false)
-                    ->searchable(false),
                 FormattedColumn::make('cost_per_item')
                     ->title(trans('plugins/ecommerce::products.form.cost_per_item'))
                     ->renderUsing(function (FormattedColumn $column) {

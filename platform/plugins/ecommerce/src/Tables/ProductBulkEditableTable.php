@@ -4,6 +4,7 @@ namespace Botble\Ecommerce\Tables;
 
 use Botble\Ecommerce\Models\Product;
 use Botble\Table\Abstracts\TableAbstract;
+use Botble\Table\Columns\Column;
 use Botble\Table\Columns\FormattedColumn;
 use Botble\Table\Columns\IdColumn;
 use Botble\Table\Columns\ImageColumn;
@@ -27,11 +28,11 @@ abstract class ProductBulkEditableTable extends TableAbstract
     {
         $this
             ->addColumns([
-                IdColumn::make()
+                Column::make('DT_RowIndex')
+                    ->title(trans('core/base::tables.id'))
+                    ->alignStart()
                     ->orderable(false)
-                    ->getValueUsing(function (IdColumn $column) {
-                        return ! $column->getItem()->is_variation ? $column->getItem()->id : '';
-                    }),
+                    ->searchable(false),
                 ImageColumn::make()
                     ->orderable(false)
                     ->renderUsing(function (ImageColumn $column, $content) {
