@@ -317,7 +317,7 @@ class OrderTable extends TableAbstract
             ->searchable(false)
             ->renderUsing(function (FormattedColumn $column) {
                 $item = $column->getItem();
-                $printInvoiceUrl = route('orders.generate-invoice', ['order' => $item->id]);
+                $printInvoiceUrl = route('orders.print-thermal-invoice', ['order' => $item->id]);
                 
                 $output = '<div class="table-actions" style="display: flex; gap: 8px;">';
                 

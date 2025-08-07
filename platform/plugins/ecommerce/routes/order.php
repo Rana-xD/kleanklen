@@ -22,6 +22,12 @@ AdminHelper::registerRoutes(function (): void {
                 'permission' => 'orders.edit',
             ])->wherePrimaryKey();
 
+            Route::get('print-thermal-invoice/{order}', [
+                'as' => 'print-thermal-invoice',
+                'uses' => 'OrderController@printThermalInvoice',
+                'permission' => 'orders.edit',
+            ])->wherePrimaryKey();
+
             Route::post('confirm', [
                 'as' => 'confirm',
                 'uses' => 'OrderController@postConfirm',

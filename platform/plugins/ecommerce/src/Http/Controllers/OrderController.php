@@ -327,6 +327,148 @@ class OrderController extends BaseController
         return InvoiceHelper::downloadInvoice($order->invoice);
     }
 
+    public function printThermalInvoice(Order $order)
+    {
+        // Create invoice if it doesn't exist
+        if (!$order->isInvoiceAvailable()) {
+            InvoiceHelper::store($order);
+        }
+
+        // Generate thermal invoice template
+        return $this->generateThermalInvoiceTemplate($order);
+    }
+
+    private function generateThermalInvoiceTemplate(Order $order)
+    {
+        // Get customer information
+        $address = $order->shippingAddress;
+        if (EcommerceHelper::isBillingAddressEnabled() && $order->billingAddress->id) {
+            $address = $order->billingAddress;
+        }
+
+        $customerName = $address->name ?: $order->user->name;
+        $customerPhone = $address->phone ?: $order->user->phone;
+        $customerLocation = $this->getCustomerLocation($address);
+
+        // Get order products with barcode
+        $products = [];
+        $subtotal = 0;
+        foreach ($order->products as $orderProduct) {
+            $lineTotal = $orderProduct->price * $orderProduct->qty;
+            $products[] = [
+                'name' => $orderProduct->product_name,
+                'price' => $orderProduct->price,
+                'qty' => $orderProduct->qty,
+                'barcode' => $orderProduct->product->barcode ?? str_pad(rand(100000000, 999999999), 9, '0', STR_PAD_LEFT),
+                'total' => $lineTotal,
+            ];
+            $subtotal += $lineTotal;
+        }
+
+        // Generate invoice number (reset daily)
+        $invoiceNumber = $this->generateInvoiceNumber($order);
+
+        // Get logo as base64 for PDF compatibility
+        $logoBase64 = $this->getLogoBase64();
+        
+        // Prepare template data
+        $data = [
+            'order' => $order,
+            'customer_name' => $customerName,
+            'customer_phone' => $customerPhone,
+            'customer_location' => $customerLocation,
+            'products' => $products,
+            'total_amount' => $subtotal,
+            'date' => $order->created_at->format('d-m-Y'),
+            'order_time' => $order->created_at->format('H:i'),
+            'invoice_number' => $invoiceNumber,
+            'notes' => $order->description,
+            'logo_base64' => $logoBase64,
+        ];
+
+        // Generate HTML content
+        $html = view('plugins/ecommerce::invoices.thermal-template', $data)->render();
+
+        // Create PDF with thermal printer settings (3x6 inch)
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadHTML($html);
+        $pdf->setPaper([0, 0, 216, 432], 'portrait'); // 3x6 inch in points (72 points per inch)
+        
+        // Configure DomPDF options for better Unicode/Khmer support
+        $pdf->getDomPDF()->getOptions()->set('isUnicode', true);
+        $pdf->getDomPDF()->getOptions()->set('isHtml5ParserEnabled', true);
+        $pdf->getDomPDF()->getOptions()->set('defaultFont', 'DejaVu Sans');
+        
+        return $pdf->stream('thermal-invoice-' . $order->code . '.pdf');
+    }
+
+    /**
+     * Generate invoice number with daily reset
+     */
+    private function generateInvoiceNumber(Order $order)
+    {
+        // Get today's date
+        $today = now()->format('Y-m-d');
+        
+        // Count orders created today (including current order)
+        $todayOrdersCount = Order::whereDate('created_at', $today)
+            ->where('id', '<=', $order->id)
+            ->count();
+            
+        // Format as 6-digit number with leading zeros
+        return str_pad($todayOrdersCount, 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Get logo as base64 for PDF compatibility
+     */
+    private function getLogoBase64()
+    {
+        try {
+            // Try to get the logo from the URL
+            $logoUrl = 'https://kleanklen.store/storage/kleanklen-removebg-preview.png';
+            $imageData = @file_get_contents($logoUrl);
+            
+            if ($imageData !== false) {
+                $base64 = base64_encode($imageData);
+                return 'data:image/png;base64,' . $base64;
+            }
+        } catch (Exception $e) {
+            // Log error but don't break the invoice generation
+            \Illuminate\Support\Facades\Log::warning('Could not load logo for thermal invoice: ' . $e->getMessage());
+        }
+        
+        // Return null if logo cannot be loaded
+        return null;
+    }
+
+    private function getCustomerLocation($address)
+    {
+        $state = $address->state ?? '';
+        $stateName = $state;
+        
+        // Check if it's Phnom Penh
+        $isPhomPenh = ($state == '15' || $state == 15 || $state === 'Phnom Penh');
+        
+        if ($isPhomPenh) {
+            $stateName = 'Phnom Penh';
+        } else {
+            // Try to get state name from available states
+            $states = EcommerceHelper::getAvailableStatesByCountry($address->country ?? EcommerceHelper::getDefaultCountryId());
+            $stateName = $states[$state] ?? $state;
+            if ($stateName === 'Phnom Penh') {
+                $isPhomPenh = true;
+            }
+        }
+        
+        $location = $stateName;
+        if ($isPhomPenh && $address->address) {
+            $location .= ', ' . $address->address;
+        }
+        
+        return $location;
+    }
+
     public function postConfirm(Request $request)
     {
         /**
