@@ -96,6 +96,20 @@ Theme::registerRoutes(function (): void {
         )->name('password.reset');
         Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')
             ->name('password.reset.update');
+
+        // New phone-based reset routes
+        Route::get('password/phone', 'PhonePasswordResetController@showPhoneForm')->name('password.phone');
+        Route::get('password/phone/demo', function() {
+            return Theme::scope(
+                'ecommerce.customers.passwords.phone',
+                [],
+                'plugins/ecommerce::themes.customers.passwords.phone'
+            )->render();
+        })->name('password.phone.demo');
+        Route::post('password/phone/send-otp', 'PhonePasswordResetController@sendOtp')->name('password.phone.send');
+        Route::post('password/phone/verify-otp', 'PhonePasswordResetController@verifyOtp')->name('password.phone.verify');
+        Route::get('password/phone/reset/{token}', 'PhonePasswordResetController@showResetForm')->name('password.phone.reset');
+        Route::post('password/phone/reset', 'PhonePasswordResetController@resetPassword')->name('password.phone.reset.post');
     });
 
     Route::group([

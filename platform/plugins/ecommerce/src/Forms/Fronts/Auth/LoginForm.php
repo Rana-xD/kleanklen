@@ -91,7 +91,11 @@ class LoginForm extends AuthForm
                 'forgot_password',
                 HtmlField::class,
                 [
-                    'html' => Html::link(route('customer.password.reset'), __('Forgot password?'), attributes: ['class' => 'text-decoration-underline']),
+                    'html' => Html::link(
+                        config('services.firebase.project_id') ? route('customer.password.phone') : route('customer.password.reset'), 
+                        __('Forgot password?'), 
+                        attributes: ['class' => 'text-decoration-underline']
+                    ),
                     'wrapper' => [
                         'class' => 'col-6 text-end',
                     ],
