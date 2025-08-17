@@ -334,8 +334,63 @@ class OrderController extends BaseController
             InvoiceHelper::store($order);
         }
 
-        // Generate thermal invoice template
-        return $this->generateThermalInvoiceTemplate($order);
+        // Generate frontend thermal invoice template for browser printing
+        return $this->generateFrontendThermalInvoice($order);
+    }
+
+    /**
+     * Generate frontend thermal invoice for browser printing with proper Khmer support
+     */
+    private function generateFrontendThermalInvoice(Order $order)
+    {
+        // Get customer information
+        $address = $order->shippingAddress;
+        if (EcommerceHelper::isBillingAddressEnabled() && $order->billingAddress->id) {
+            $address = $order->billingAddress;
+        }
+
+        $customerName = $address->name ?: $order->user->name;
+        $customerPhone = $address->phone ?: $order->user->phone;
+        $customerLocation = $this->getCustomerLocation($address);
+
+        // Get order products with barcode
+        $products = [];
+        $subtotal = 0;
+        foreach ($order->products as $orderProduct) {
+            $lineTotal = $orderProduct->price * $orderProduct->qty;
+            $products[] = [
+                'name' => $orderProduct->product_name,
+                'price' => $orderProduct->price,
+                'qty' => $orderProduct->qty,
+                'barcode' => $orderProduct->product->barcode ?? str_pad(rand(100000000, 999999999), 9, '0', STR_PAD_LEFT),
+                'total' => $lineTotal,
+            ];
+            $subtotal += $lineTotal;
+        }
+
+        // Generate invoice number (reset daily)
+        $invoiceNumber = $this->generateInvoiceNumber($order);
+
+        // Get logo as base64 for compatibility
+        $logoBase64 = $this->getLogoBase64();
+        
+        // Prepare template data
+        $data = [
+            'order' => $order,
+            'customer_name' => $customerName,
+            'customer_phone' => $customerPhone,
+            'customer_location' => $customerLocation,
+            'products' => $products,
+            'total_amount' => $subtotal,
+            'date' => $order->created_at->format('d-m-Y'),
+            'order_time' => $order->created_at->format('H:i'),
+            'invoice_number' => $invoiceNumber,
+            'notes' => $order->description,
+            'logo_base64' => $logoBase64,
+        ];
+
+        // Return the frontend printing view
+        return view('plugins/ecommerce::invoices.thermal-print', $data);
     }
 
     private function generateThermalInvoiceTemplate(Order $order)
@@ -395,9 +450,21 @@ class OrderController extends BaseController
         $pdf->setPaper([0, 0, 216, 432], 'portrait'); // 3x6 inch in points (72 points per inch)
         
         // Configure DomPDF options for better Unicode/Khmer support
-        $pdf->getDomPDF()->getOptions()->set('isUnicode', true);
-        $pdf->getDomPDF()->getOptions()->set('isHtml5ParserEnabled', true);
-        $pdf->getDomPDF()->getOptions()->set('defaultFont', 'DejaVu Sans');
+        $dompdf = $pdf->getDomPDF();
+        $options = $dompdf->getOptions();
+        $options->set('isUnicode', true);
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'DejaVu Sans');
+        
+        // Set font directory for Khmer fonts
+        $options->set('fontDir', public_path('fonts'));
+        
+        // Enable font subsetting for better Unicode support  
+        $options->set('fontSubsetting', true);
+        
+        // Set default font to one that might have better Unicode support
+        $options->set('defaultFont', 'DejaVu Sans');
         
         return $pdf->stream('thermal-invoice-' . $order->code . '.pdf');
     }

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="km">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thermal Invoice - {{ $order->code }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Embed Khmer font as base64 for reliable Dompdf loading */
         @font-face {
-            font-family: 'KhmerFont';
-            src: url('https://fonts.googleapis.com/css2?family=Koh+Santepheap:wght@300;400;700&display=swap');
+            font-family: 'NotoSansKhmer';
+            src: url('data:font/truetype;base64,{{ base64_encode(file_get_contents(public_path("fonts/NotoSansKhmer-Regular.ttf"))) }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -33,8 +34,12 @@
         }
 
         .khmer-text {
-            font-family: 'DejaVu Sans', 'Arial Unicode MS', sans-serif;
+            font-family: 'NotoSansKhmer', 'DejaVu Sans', sans-serif !important;
             line-height: 1.4;
+            font-size: 10px;
+            unicode-bidi: embed;
+            direction: ltr;
+            font-weight: normal;
         }
 
         /* Header Section */
@@ -295,9 +300,9 @@
             Thank you for your purchase!
         </div>
         
-        <div class="policy">
-            <div class="policy-item">Please check all items within 24 hours for any exchange or refund requests</div>
-            <div class="policy-item">Opened or used products cannot be exchanged</div>
+        <div class="policy khmer-text">
+            <div class="policy-item">សូមពិនិត្យមើលទំនិញទាំងអស់ក្នុងរយៈពេល ២៤ ម៉ោង ដើម្បីដាក់ស្នើការប្តូរ ឬសំណង</div>
+            <div class="policy-item">ទំនិញដែលបានបើកប្រើ មិនអាចប្តូរបានទេ</div>
         </div>
     </div>
 </body>

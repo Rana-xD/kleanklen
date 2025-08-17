@@ -1,0 +1,15 @@
+{
+    "noto sans khmer": {
+        "normal": "\/Users\/rana\/Desktop\/Rana\/Personal\/kleanklen\/storage\/fonts\/noto_sans_khmer_normal_39280adcf5a6ae061dc328d8cc521e15",
+        "bold": "noto_sans_khmer_bold_5602035c1e9c4f25d8e8139292567dc1"
+    },
+    "khmerfallback": {
+        "normal": "khmerfallback_normal_9da5e1e8f693bfb7b5afd99d0b3ed2e3"
+    },
+    "notosanskhmerlocal": {
+        "normal": "notosanskhmerlocal_normal_660b620428e17836de7dacefac178854"
+    },
+    "notosanskhmer": {
+        "normal": "notosanskhmer_normal_a9633e8806292b8703626391717003e9"
+    }
+}
