@@ -1,4 +1,6 @@
 @php
+    Theme::set('breadcrumbHeight', 100);
+    Theme::set('pageTitle', __('Enter Verification Code'));
     SeoHelper::setTitle(__('Enter Verification Code'));
     Theme::breadcrumb()
         ->add(__('Reset Password'), route('customer.password.phone'))
@@ -45,9 +47,7 @@
                         </div>
                         
                         <div class="text-center">
-                            <button type="button" class="btn btn-link" id="resend-otp-btn">
-                                {{ __('Resend Code') }}
-                            </button>
+                            <a href="#" id="resend-otp-link" class="text-decoration-underline">{{ __('Resend Code') }}</a>
                         </div>
                         
                         <div class="text-center mt-3">
@@ -144,7 +144,8 @@ document.getElementById('verify-otp-btn').addEventListener('click', async functi
 });
 
 // Handle resend OTP
-document.getElementById('resend-otp-btn').addEventListener('click', function() {
+document.getElementById('resend-otp-link').addEventListener('click', function(e) {
+    e.preventDefault();
     window.location.href = '{{ route("customer.password.phone") }}';
 });
 

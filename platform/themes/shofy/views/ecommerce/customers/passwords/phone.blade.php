@@ -1,4 +1,9 @@
-{!! $form->renderForm() !!}
+@php
+    Theme::set('breadcrumbHeight', 100);
+    Theme::set('pageTitle', __('Reset Password via Phone'));
+@endphp
+
+{!! $form->bannerDirection('horizontal')->renderForm() !!}
 
 <!-- Success/Error Messages -->
 <div id="success-message" style="display: none;" class="alert alert-success mt-3">
