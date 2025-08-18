@@ -133,6 +133,31 @@ class PhonePasswordResetController extends BaseController
     }
     
     /**
+     * Show OTP verification form
+     */
+    public function showOtpForm(Request $request)
+    {
+        $sessionToken = $request->query('token');
+        if (!$sessionToken || !Session::has("phone_reset_$sessionToken")) {
+            return redirect()->route('customer.password.phone')
+                ->with('error', __('Invalid or expired session. Please try again.'));
+        }
+
+        $sessionData = Session::get("phone_reset_$sessionToken");
+        
+        SeoHelper::setTitle(__('Enter Verification Code'));
+        Theme::breadcrumb()
+            ->add(__('Reset Password'), route('customer.password.phone'))
+            ->add(__('Verify Code'), route('customer.password.phone.otp', ['token' => $sessionToken]));
+
+        return Theme::scope(
+            'ecommerce.customers.passwords.phone-otp',
+            compact('sessionToken', 'sessionData'),
+            'plugins/ecommerce::themes.customers.passwords.phone-otp'
+        )->render();
+    }
+
+    /**
      * Send OTP to phone number
      */
     public function sendOtp(Request $request)
@@ -200,7 +225,7 @@ class PhonePasswordResetController extends BaseController
             $sessionToken = Str::random(60);
             
             // Store in session with customer ID
-            Session::put('phone_reset_session', [
+            Session::put("phone_reset_$sessionToken", [
                 'token' => $sessionToken,
                 'phone' => $phone,
                 'customer_id' => $customer->id,
@@ -209,9 +234,10 @@ class PhonePasswordResetController extends BaseController
             
             return response()->json([
                 'success' => true,
-                'message' => __('OTP has been sent to your phone.'),
+                'message' => __('OTP sent successfully.'),
                 'session_token' => $sessionToken,
-                'phone' => $this->maskPhoneNumber($phone),
+                'phone' => $this->maskPhoneNumber($request->phone),
+                'redirect_url' => route('customer.password.phone.otp', ['token' => $sessionToken]),
             ]);
             
         } catch (Exception $e) {

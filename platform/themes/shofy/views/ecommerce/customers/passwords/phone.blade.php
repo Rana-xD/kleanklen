@@ -1,60 +1,8 @@
 {!! $form->renderForm() !!}
 
-<!-- OTP Step (hidden initially) -->
-<div id="otp-step" style="display: none; position: relative; z-index: 1000;">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="auth-card">
-                    <div class="auth-card__body">
-                        <div class="auth-card__header">
-                            <h3 class="auth-card__title">{{ __('Enter Verification Code') }}</h3>
-                            <p class="auth-card__description">
-                                {{ __('Enter the 6-digit code sent to') }} <span id="phone-display" class="fw-bold"></span>
-                            </p>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="otp" class="form-label">{{ __('Verification Code') }}</label>
-                            <input type="text" 
-                                   class="form-control text-center" 
-                                   id="otp" 
-                                   name="otp_code" 
-                                   maxlength="6" 
-                                   pattern="[0-9]{6}"
-                                   placeholder="000000"
-                                   style="font-size: 1.2rem; letter-spacing: 0.5rem;"
-                                   required>
-                        </div>
-                        
-                        <input type="hidden" id="verification-id" name="verification_id">
-                        <input type="hidden" id="session-token" name="session_token">
-                        
-                        <div class="d-grid mb-3">
-                            <button type="button" class="btn btn-primary btn-auth-submit" id="verify-otp-btn">
-                                {{ __('Verify Code') }}
-                            </button>
-                        </div>
-                        
-                        <div class="text-center">
-                            <button type="button" class="btn btn-link" id="resend-otp-btn">
-                                {{ __('Resend Code') }}
-                            </button>
-                        </div>
-                        
-                        <div class="text-center mt-3">
-                            <a href="{{ route('customer.login') }}" class="text-decoration-underline">{{ __('Back to login page') }}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Success/Error Messages -->
 <div id="success-message" style="display: none;" class="alert alert-success mt-3">
-    {{ __('Verification successful! Redirecting...') }}
+    {{ __('OTP sent successfully! Redirecting to verification page...') }}
 </div>
 <div id="error-message" style="display: none;" class="alert alert-danger mt-3"></div>
 
@@ -167,24 +115,14 @@ async function sendOTP() {
         sendBtn.disabled = false;
         sendBtn.textContent = '{{ __("Send Verification Code") }}';
         
-        // Show OTP input - hide the form and show OTP step
-        const form = document.querySelector('form');
-        const otpStep = document.getElementById('otp-step');
+        // Store Firebase confirmation in session storage for OTP page
+        sessionStorage.setItem('firebase_confirmation_' + sessionToken, JSON.stringify({
+            timestamp: Date.now(),
+            phone: phone
+        }));
         
-        if (form) {
-            form.parentElement.style.display = 'none';
-        }
-        if (otpStep) {
-            otpStep.style.display = 'block';
-            otpStep.style.visibility = 'visible';
-            otpStep.style.opacity = '1';
-            console.log('OTP step displayed');
-            
-            // Scroll to OTP step
-            otpStep.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            console.error('OTP step element not found');
-        }
+        // Redirect to OTP verification page
+        window.location.href = data.redirect_url;
         
     } catch (error) {
         console.error('Error:', error);

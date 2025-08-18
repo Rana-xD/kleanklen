@@ -107,6 +107,7 @@ Theme::registerRoutes(function (): void {
             )->render();
         })->name('password.phone.demo');
         Route::post('password/phone/send-otp', 'PhonePasswordResetController@sendOtp')->name('password.phone.send');
+        Route::get('password/phone/otp', 'PhonePasswordResetController@showOtpForm')->name('password.phone.otp');
         Route::post('password/phone/verify-otp', 'PhonePasswordResetController@verifyOtp')->name('password.phone.verify');
         Route::get('password/phone/reset/{token}', 'PhonePasswordResetController@showResetForm')->name('password.phone.reset');
         Route::post('password/phone/reset', 'PhonePasswordResetController@resetPassword')->name('password.phone.reset.post');
