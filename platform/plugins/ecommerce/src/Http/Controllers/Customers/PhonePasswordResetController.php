@@ -160,8 +160,26 @@ class PhonePasswordResetController extends BaseController
             ], 422);
         }
         
-        // Check if customer exists
-        $customer = Customer::where('phone', $phone)->first();
+        // Check if customer exists - try both original and formatted phone numbers
+        $customer = Customer::where('phone', $request->phone)->first();
+        
+        if (!$customer) {
+            // Try with formatted international number
+            $customer = Customer::where('phone', $phone)->first();
+        }
+        
+        if (!$customer) {
+            // Try with other possible formats
+            $cleanPhone = preg_replace('/\D/', '', $request->phone);
+            if (str_starts_with($cleanPhone, '0')) {
+                // Try without leading zero
+                $customer = Customer::where('phone', substr($cleanPhone, 1))->first();
+            }
+            if (!$customer && !str_starts_with($cleanPhone, '0')) {
+                // Try with leading zero
+                $customer = Customer::where('phone', '0' . $cleanPhone)->first();
+            }
+        }
         
         if (!$customer) {
             return response()->json([

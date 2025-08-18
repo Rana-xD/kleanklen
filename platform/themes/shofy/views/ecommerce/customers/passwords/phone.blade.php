@@ -96,15 +96,29 @@ let confirmationResult;
 let sessionToken;
 
 window.onload = function() {
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'normal',
-        'callback': (response) => {
-            // reCAPTCHA solved
-            document.getElementById('send-otp-btn').disabled = false;
-        }
-    });
-    
-    recaptchaVerifier.render();
+    try {
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'normal',
+            'callback': (response) => {
+                // reCAPTCHA solved
+                document.getElementById('send-otp-btn').disabled = false;
+            },
+            'expired-callback': () => {
+                // reCAPTCHA expired
+                document.getElementById('send-otp-btn').disabled = true;
+            }
+        });
+        
+        recaptchaVerifier.render().then(() => {
+            console.log('reCAPTCHA rendered successfully');
+        }).catch((error) => {
+            console.error('reCAPTCHA render error:', error);
+            showError('Failed to load reCAPTCHA. Please refresh the page.');
+        });
+    } catch (error) {
+        console.error('reCAPTCHA initialization error:', error);
+        showError('Failed to initialize reCAPTCHA. Please refresh the page.');
+    }
 };
 
 // Handle phone form submission
@@ -155,6 +169,7 @@ document.getElementById('phone-form').addEventListener('submit', async function(
         console.log('Formatted phone for Firebase:', formattedPhone);
         
         // Send OTP via Firebase
+        console.log('Attempting to send OTP to:', formattedPhone);
         confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, recaptchaVerifier);
         
         // Show OTP input
