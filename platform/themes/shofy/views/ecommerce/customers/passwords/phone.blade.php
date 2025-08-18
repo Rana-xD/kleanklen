@@ -128,8 +128,12 @@ async function sendOTP() {
         
         // Store session token
         sessionToken = data.session_token;
-        document.getElementById('session-token').value = sessionToken;
-        document.getElementById('phone-display').textContent = data.phone;
+        if (document.getElementById('session-token')) {
+            document.getElementById('session-token').value = sessionToken;
+        }
+        if (document.getElementById('phone-display')) {
+            document.getElementById('phone-display').textContent = data.phone;
+        }
         
         // Validate and format phone number for Firebase
         if (!isValidCambodiaPhone(phone)) {
@@ -147,9 +151,25 @@ async function sendOTP() {
         console.log('Attempting to send OTP to:', formattedPhone);
         confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, recaptchaVerifier);
         
+        console.log('OTP sent successfully, showing OTP input');
+        
+        // Reset button state
+        sendBtn.disabled = false;
+        sendBtn.textContent = '{{ __("Send Verification Code") }}';
+        
         // Show OTP input - hide the form and show OTP step
-        document.querySelector('form').style.display = 'none';
-        document.getElementById('otp-step').style.display = 'block';
+        const form = document.querySelector('form');
+        const otpStep = document.getElementById('otp-step');
+        
+        if (form) {
+            form.style.display = 'none';
+        }
+        if (otpStep) {
+            otpStep.style.display = 'block';
+            console.log('OTP step displayed');
+        } else {
+            console.error('OTP step element not found');
+        }
         
     } catch (error) {
         console.error('Error:', error);
