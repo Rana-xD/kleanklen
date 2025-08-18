@@ -2,17 +2,22 @@
 
 namespace Botble\Ecommerce\Http\Controllers\Customers;
 
-use Botble\Base\Http\Controllers\BaseController;
+use Botble\Ecommerce\Forms\Fronts\Auth\PhonePasswordResetForm;
+use Botble\Ecommerce\Http\Controllers\BaseController;
 use Botble\Ecommerce\Models\Customer;
+use Botble\Ecommerce\Models\CustomerPasswordReset;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Theme\Facades\Theme;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Kreait\Firebase\Auth as FirebaseAuth;
-use Exception;
+use Kreait\Firebase\Factory;
 
 class PhonePasswordResetController extends BaseController
 {
@@ -118,9 +123,11 @@ class PhonePasswordResetController extends BaseController
         Theme::breadcrumb()
             ->add(__('Reset Password'), route('customer.password.phone'));
 
+        $form = PhonePasswordResetForm::create();
+
         return Theme::scope(
             'ecommerce.customers.passwords.phone',
-            [],
+            compact('form'),
             'plugins/ecommerce::themes.customers.passwords.phone'
         )->render();
     }
