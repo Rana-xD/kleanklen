@@ -60,13 +60,16 @@ window.onload = function() {
 async function sendOTP() {
     const phone = document.getElementById('phone').value;
     const sendBtn = document.getElementById('send-otp-btn');
+    const sendOtpUrl = '{{ route("customer.password.phone.send") }}';
+    
+    console.log('Send OTP URL:', sendOtpUrl);
     
     sendBtn.disabled = true;
     sendBtn.textContent = '{{ __("Sending...") }}';
     
     try {
         // First, check if customer exists
-        const response = await fetch('{{ route("customer.password.phone.send") }}', {
+        const response = await fetch(sendOtpUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,6 +78,22 @@ async function sendOTP() {
             body: JSON.stringify({ phone: phone })
         });
         
+        if (!response.ok) {
+            // Helpful debugging for 404/other statuses
+            const text = await response.text();
+            console.error('Send OTP failed. Status:', response.status, 'Body:', text);
+            let errMsg;
+            if (response.status === 404) {
+                errMsg = "{{ __('Endpoint not found. Please refresh and try again.') }}";
+            } else {
+                errMsg = "{{ __('Failed to send verification code. Please try again.') }}";
+            }
+            showError(errMsg);
+            sendBtn.disabled = false;
+            sendBtn.textContent = '{{ __("Send Verification Code") }}';
+            return;
+        }
+
         const data = await response.json();
         
         if (data.error) {
@@ -96,14 +115,13 @@ async function sendOTP() {
         }
         
         const formattedPhone = formatPhoneNumber(phone);
-        document.getElementById('phone-display').textContent = phone; // Show original input
         console.log('Formatted phone for Firebase:', formattedPhone);
         
         // Send OTP via Firebase
         console.log('Attempting to send OTP to:', formattedPhone);
         confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, recaptchaVerifier);
         
-        console.log('OTP sent successfully, showing OTP input');
+        console.log('OTP sent successfully, preparing redirect');
         
         // Reset button state
         sendBtn.disabled = false;
@@ -205,7 +223,7 @@ async function resendOTP() {
         recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
             'size': 'normal',
             'callback': (response) => {
-                document.getElementById('submit').disabled = false;
+                document.getElementById('send-otp-btn').disabled = false;
             }
         });
         await recaptchaVerifier.render();

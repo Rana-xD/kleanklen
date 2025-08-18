@@ -255,7 +255,7 @@ class PhonePasswordResetController extends BaseController
     public function verifyOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'verification_id' => 'required|string',
+            'verification_id' => 'nullable|string',
             'otp_code' => 'required|string|size:6',
             'session_token' => 'required|string',
         ]);
@@ -267,10 +267,11 @@ class PhonePasswordResetController extends BaseController
             ], 422);
         }
         
-        $sessionData = Session::get('phone_reset_session');
+        $sessionKey = "phone_reset_{$request->session_token}";
+        $sessionData = Session::get($sessionKey);
         
-        if (!$sessionData || 
-            $sessionData['token'] !== $request->session_token ||
+        if (!$sessionData ||
+            ($sessionData['token'] ?? null) !== $request->session_token ||
             now()->isAfter($sessionData['expires_at'])) {
             return response()->json([
                 'error' => true,
@@ -290,12 +291,13 @@ class PhonePasswordResetController extends BaseController
             ]);
             
             // Clear OTP session
-            Session::forget('phone_reset_session');
+            Session::forget($sessionKey);
             
             return response()->json([
                 'success' => true,
                 'message' => __('Phone verified successfully.'),
                 'reset_token' => $resetToken,
+                'redirect_url' => route('customer.password.phone.reset', ['token' => $resetToken]),
             ]);
             
         } catch (Exception $e) {
