@@ -86,12 +86,6 @@ async function sendOTP() {
         
         // Store session token
         sessionToken = data.session_token;
-        if (document.getElementById('session-token')) {
-            document.getElementById('session-token').value = sessionToken;
-        }
-        if (document.getElementById('phone-display')) {
-            document.getElementById('phone-display').textContent = data.phone;
-        }
         
         // Validate and format phone number for Firebase
         if (!isValidCambodiaPhone(phone)) {
