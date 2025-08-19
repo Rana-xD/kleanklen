@@ -7,58 +7,67 @@
         ->add(__('Verify Code'));
 @endphp
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="auth-card">
-                <div class="auth-card__body">
-                    <div class="auth-card__header">
-                        <div class="auth-card__icon">
-                            <i class="ti ti-phone"></i>
-                        </div>
-                        <h3 class="auth-card__title">{{ __('Enter Verification Code') }}</h3>
-                        <p class="auth-card__description">
-                            {{ __('Enter the 6-digit code sent to') }} <span class="fw-bold">{{ $sessionData['phone'] ?? '' }}</span>
-                        </p>
+<section class="tp-login-area pb-140 p-relative z-index-1 fix">
+    <div class="tp-login-shape">
+        <img class="tp-login-shape-1" src="{{ Theme::asset()->url('images/login/login-shape-1.png') }}" alt="">
+        <img class="tp-login-shape-2" src="{{ Theme::asset()->url('images/login/login-shape-2.png') }}" alt="">
+        <img class="tp-login-shape-3" src="{{ Theme::asset()->url('images/login/login-shape-3.png') }}" alt="">
+        <img class="tp-login-shape-4" src="{{ Theme::asset()->url('images/login/login-shape-4.png') }}" alt="">
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <div class="tp-login-wrapper">
+                    <div class="tp-login-top text-center mb-30">
+                        <h3 class="tp-login-title">{{ __('Enter Verification Code') }}</h3>
+                        <p>{{ __('Enter the 6-digit code sent to') }} <span class="fw-bold">{{ $sessionData['phone'] ?? '' }}</span></p>
                     </div>
                     
-                    <form id="otp-form">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="otp" class="form-label">{{ __('Verification Code') }}</label>
-                            <input type="text" 
-                                   class="form-control text-center" 
-                                   id="otp" 
-                                   name="otp_code" 
-                                   maxlength="6" 
-                                   pattern="[0-9]{6}"
-                                   placeholder="000000"
-                                   style="font-size: 1.2rem; letter-spacing: 0.5rem;"
-                                   required>
-                        </div>
-                        
-                        <input type="hidden" id="verification-id" name="verification_id">
-                        <input type="hidden" id="session-token" name="session_token" value="{{ $sessionToken }}">
-                        
-                        <div class="d-grid mb-3">
-                            <button type="button" class="btn btn-primary btn-auth-submit" id="verify-otp-btn">
-                                {{ __('Verify Code') }}
-                            </button>
-                        </div>
-                        
-                        <div class="text-center">
-                            <a href="#" id="resend-otp-link" class="text-decoration-underline">{{ __('Resend Code') }}</a>
-                        </div>
-                        
-                        <div class="text-center mt-3">
-                            <a href="{{ route('customer.password.phone') }}" class="text-decoration-underline">{{ __('Back to phone input') }}</a>
-                        </div>
-                    </form>
+                    <div class="tp-login-bottom">
+                        <form id="otp-form">
+                            @csrf
+                            <div class="tp-login-input-wrapper">
+                                <div class="tp-login-input-box">
+                                    <div class="tp-login-input">
+                                        <input type="text" 
+                                               id="otp" 
+                                               name="otp_code" 
+                                               maxlength="6" 
+                                               pattern="[0-9]{6}"
+                                               placeholder="{{ __('Enter 6-digit code') }}"
+                                               style="text-align: center; font-size: 1.2rem; letter-spacing: 0.5rem;"
+                                               required>
+                                    </div>
+                                    <div class="tp-login-input-title">
+                                        <label for="otp">{{ __('Verification Code') }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" id="verification-id" name="verification_id">
+                            <input type="hidden" id="session-token" name="session_token" value="{{ $sessionToken }}">
+                            
+                            <div class="tp-login-suggetions d-sm-flex align-items-center justify-content-between mb-20">
+                                <div class="tp-login-remeber">
+                                    <a href="#" id="resend-otp-link">{{ __('Resend Code') }}</a>
+                                </div>
+                                <div class="tp-login-forgot">
+                                    <a href="{{ route('customer.password.phone') }}">{{ __('Back to phone input') }}</a>
+                                </div>
+                            </div>
+                            
+                            <div class="tp-login-bottom-action">
+                                <button type="button" class="tp-btn w-100" id="verify-otp-btn">
+                                    {{ __('Verify Code') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Success/Error Messages -->
 <div id="success-message" style="display: none;" class="alert alert-success mt-3">
