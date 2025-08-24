@@ -1213,6 +1213,36 @@ textarea {
         }
     }
 
+    // Mobile search input improvements - centered and wider
+    &-header-search-2 {
+        &.tp-header-search-mobile-wide {
+            @media (max-width: 1199px) {
+                width: 100%; // Use full available width
+                max-width: 100%;
+            }
+        }
+    }
+
+    // Header bottom center container for search
+    &-header-bottom-center {
+        @media (max-width: 1199px) {
+            padding: 0 10px; // Add some padding to prevent edge touching
+        }
+        
+        @media (max-width: 575px) {
+            padding: 0 5px; // Smaller padding on very small screens
+        }
+    }
+
+    // Adjust logo size on mobile to save space
+    .logo {
+        @media (max-width: 575px) {
+            img {
+                max-height: 30px !important; // Smaller logo on mobile
+            }
+        }
+    }
+
     &-product-details-sticky-actions {
         position: fixed;
         bottom: 0;

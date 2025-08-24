@@ -1,5 +1,5 @@
 <div style="display: flex;justify-content: center;align-content: center;">
-    <img src="{{ RvMedia::getImageUrl('img-7819.PNG') }}" alt="" style="width: 80%;">
+    <img src="{{ RvMedia::getImageUrl('aba-qr-code.jpeg') }}" alt="" style="width: 80%;">
 </div>
 @if ($discounts->isNotEmpty())
     <div class="checkout__coupon-section">

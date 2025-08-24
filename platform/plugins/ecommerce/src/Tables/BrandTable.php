@@ -8,12 +8,14 @@ use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\DeleteAction;
 use Botble\Table\Actions\EditAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
+use Botble\Table\Columns\Column;
 use Botble\Table\Columns\CreatedAtColumn;
 use Botble\Table\Columns\IdColumn;
 use Botble\Table\Columns\ImageColumn;
 use Botble\Table\Columns\NameColumn;
 use Botble\Table\Columns\StatusColumn;
 use Botble\Table\Columns\YesNoColumn;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,7 +54,11 @@ class BrandTable extends TableAbstract
     public function columns(): array
     {
         return [
-            IdColumn::make(),
+            Column::make('DT_RowIndex')
+                ->title(trans('core/base::tables.id'))
+                ->alignStart()
+                ->orderable(false)
+                ->searchable(false),
             ImageColumn::make('logo')
                 ->title(trans('plugins/ecommerce::brands.logo')),
             NameColumn::make()->route('brands.edit'),
@@ -62,6 +68,15 @@ class BrandTable extends TableAbstract
             CreatedAtColumn::make(),
             StatusColumn::make(),
         ];
+    }
+
+    public function ajax(): JsonResponse
+    {
+        $data = $this->table
+            ->eloquent($this->query())
+            ->addIndexColumn(); // This adds DT_RowIndex for sequential numbering
+
+        return $this->toJson($data);
     }
 
     public function buttons(): array
