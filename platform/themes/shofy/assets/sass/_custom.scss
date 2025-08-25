@@ -1213,13 +1213,15 @@ textarea {
         }
     }
 
-    // Mobile search input improvements - centered and wider
-    &-header-search-2 {
-        &.tp-header-search-mobile-wide {
-            @media (max-width: 1199px) {
-                width: 100%; // Use full available width
-                max-width: 100%;
-            }
+    .tp-header-search-mobile-wide {
+        @media (max-width: 991px) {
+            width: 76%; // Only apply on mobile/tablet screens below lg
+            max-width: 76%;
+        }
+        
+        @media (max-width: 575px) {
+            width: 70%; // Shorter on very small screens to prevent overlap
+            max-width: 70%;
         }
     }
 

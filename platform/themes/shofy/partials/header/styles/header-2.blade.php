@@ -34,8 +34,8 @@
                         @if(is_plugin_active('ecommerce'))
                             <!-- Search & Actions - Desktop: original layout, Mobile: centered search -->
                             <div class="col-xl-5 col-lg-7 col-md-7 col-sm-8 col-6">
-                                <!-- Desktop Layout (xl only) -->
-                                <div class="tp-header-bottom-right d-none d-xl-flex align-items-center justify-content-end pl-30">
+                                <!-- Desktop/Tablet Layout (lg and up) - Original layout -->
+                                <div class="tp-header-bottom-right d-none d-lg-flex align-items-center justify-content-end pl-30">
                                     <div class="tp-header-search-2">
                                         <x-plugins-ecommerce::fronts.ajax-search>
                                             <x-plugins-ecommerce::fronts.ajax-search.input />
@@ -57,8 +57,8 @@
                                     {!! Theme::partial('header.actions', ['class' => 'ml-30']) !!}
                                 </div>
                                 
-                                <!-- Mobile/Tablet Layout (lg and below) - Centered Search Only -->
-                                <div class="tp-header-bottom-center d-flex d-xl-none align-items-center justify-content-center">
+                                <!-- Mobile Layout (md and below) - Centered Search Only -->
+                                <div class="tp-header-bottom-center d-flex d-lg-none align-items-center justify-content-center">
                                     <div class="tp-header-search-2 tp-header-search-mobile-wide">
                                         <x-plugins-ecommerce::fronts.ajax-search>
                                             <x-plugins-ecommerce::fronts.ajax-search.input />
@@ -80,8 +80,8 @@
                                 </div>
                             </div>
                             
-                            <!-- Mobile Actions Column - Only visible on tablet/mobile -->
-                            <div class="col-3 d-xl-none">
+                            <!-- Mobile Actions Column - Only visible on mobile -->
+                            <div class="col-3 d-lg-none">
                                 <div class="tp-header-bottom-right d-flex align-items-center justify-content-end">
                                     {!! Theme::partial('header.actions', ['class' => '']) !!}
                                 </div>
