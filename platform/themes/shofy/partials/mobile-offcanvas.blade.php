@@ -14,7 +14,7 @@
                     {!! Theme::partial('header.logo') !!}
                 </div>
             </div>
-            @if (is_plugin_active('ecommerce') && theme_option('enabled_header_categories_dropdown_on_mobile', 'yes') === 'yes')
+            <!-- @if (is_plugin_active('ecommerce') && theme_option('enabled_header_categories_dropdown_on_mobile', 'yes') === 'yes')
                 <div class="pb-40 offcanvas__category">
                     <button class="tp-offcanvas-category-toggle">
                         <x-core::icon name="ti ti-menu-2" />
@@ -22,7 +22,7 @@
                     </button>
                     <div class="tp-category-mobile-menu"></div>
                 </div>
-            @endif
+            @endif -->
 
             <div class="mb-40 tp-main-menu-mobile fix d-xl-none"></div>
 
