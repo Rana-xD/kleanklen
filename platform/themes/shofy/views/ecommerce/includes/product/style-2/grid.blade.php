@@ -17,6 +17,14 @@
             </div>
         @endif
 
+        @if ($product->brand)
+            <h3 class="tp-product-brand-2">
+                <a href="{{ $product->brand->url }}" title="{{ $product->brand->name }}">
+                    {{ $product->brand->name }}
+                </a>
+            </h3>
+        @endif
+
         <h3 class="tp-product-title-2 text-truncate">
             <a href="{{ $product->url }}" title="{{ $product->name }}">{{ $product->name }}</a>
         </h3>
