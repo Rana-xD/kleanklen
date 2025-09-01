@@ -49,6 +49,25 @@ class ProductPriceTable extends ProductBulkEditableTable
                     ->nowrap()
                     ->width(150)
                     ->orderable(false),
+                FormattedColumn::make('with_storehouse_management')
+                    ->title(trans('plugins/ecommerce::product-inventory.storehouse_management'))
+                    ->renderUsing(function (FormattedColumn $column) {
+                        return view('plugins/ecommerce::product-inventory.columns.storehouse_management', [
+                            'product' => $column->getItem(),
+                            'type' => 'storehouse_management',
+                        ]);
+                    })
+                    ->nowrap()
+                    ->orderable(false),
+                FormattedColumn::make('quantity')
+                    ->title(trans('plugins/ecommerce::products.form.quantity'))
+                    ->renderUsing(function (FormattedColumn $column) {
+                        return view('plugins/ecommerce::product-inventory.columns.quantity', [
+                            'product' => $column->getItem(),
+                        ]);
+                    })
+                    ->nowrap()
+                    ->orderable(false),
             ]);
     }
 
@@ -88,6 +107,9 @@ class ProductPriceTable extends ProductBulkEditableTable
             'ec_products.price',
             'ec_products.sale_price',
             'ec_products.sale_type',
+            'ec_products.stock_status',
+            'ec_products.quantity',
+            'ec_products.with_storehouse_management',
         ]);
 
         return $query;
