@@ -752,15 +752,6 @@ class EcommerceServiceProvider extends ServiceProvider
                     'permissions' => ['ecommerce.product-prices.index'],
                 ])
                 ->registerItem([
-                    'id' => 'cms-plugins-ecommerce-product-inventory',
-                    'priority' => 80,
-                    'parent_id' => 'cms-plugins-ecommerce',
-                    'name' => 'plugins/ecommerce::product-inventory.name',
-                    'icon' => 'ti ti-home-check',
-                    'url' => fn () => route('ecommerce.product-inventory.index'),
-                    'permissions' => ['ecommerce.product-inventory.index'],
-                ])
-                ->registerItem([
                     'id' => 'cms-plugins-product-categories',
                     'priority' => 90,
                     'parent_id' => 'cms-plugins-ecommerce',
@@ -915,6 +906,15 @@ class EcommerceServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-basket-down',
                         'url' => fn () => route('order_returns.index'),
                         'permissions' => ['orders.edit'],
+                    ])
+                    ->registerItem([
+                        'id' => 'cms-plugins-ecommerce-product-inventory',
+                        'priority' => 80,
+                        'parent_id' => 'cms-plugins-ecommerce',
+                        'name' => 'plugins/ecommerce::product-inventory.name',
+                        'icon' => 'ti ti-home-check',
+                        'url' => fn () => route('ecommerce.product-inventory.index'),
+                        'permissions' => ['ecommerce.product-inventory.index'],
                     ]);
                 });
         });
