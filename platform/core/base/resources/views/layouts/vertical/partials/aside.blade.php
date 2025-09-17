@@ -42,7 +42,7 @@
                         ></span>
                         <div class="d-none d-xl-block ps-2">
                             <div>{{ Auth::guard()->user()->name }}</div>
-                            <div class="mt-1 small text-muted">{{ Auth::guard()->user()->email }}</div>
+                            <!-- <div class="mt-1 small text-muted">{{ Auth::guard()->user()->email }}</div> -->
                         </div>
                     </a>
                 </x-slot:trigger>

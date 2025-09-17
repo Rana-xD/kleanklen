@@ -713,15 +713,6 @@ class EcommerceServiceProvider extends ServiceProvider
                     'url' => fn () => route('orders.index'),
                     'permissions' => ['orders.index'],
                 ])
-                ->registerItem([
-                    'id' => 'cms-plugins-ecommerce-incomplete-order',
-                    'priority' => 20,
-                    'parent_id' => 'cms-plugins-ecommerce',
-                    'name' => 'plugins/ecommerce::order.incomplete_order',
-                    'icon' => 'ti ti-basket-cancel',
-                    'url' => fn () => route('orders.incomplete-list'),
-                    'permissions' => ['orders.index'],
-                ])
                 ->when(! EcommerceHelper::isDisabledPhysicalProduct(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu->registerItem([
                         'id' => 'cms-plugins-ecommerce-shipping-shipments',
@@ -915,6 +906,15 @@ class EcommerceServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-home-check',
                         'url' => fn () => route('ecommerce.product-inventory.index'),
                         'permissions' => ['ecommerce.product-inventory.index'],
+                    ])
+                    ->registerItem([
+                        'id' => 'cms-plugins-ecommerce-incomplete-order',
+                        'priority' => 20,
+                        'parent_id' => 'cms-plugins-ecommerce',
+                        'name' => 'plugins/ecommerce::order.incomplete_order',
+                        'icon' => 'ti ti-basket-cancel',
+                        'url' => fn () => route('orders.incomplete-list'),
+                        'permissions' => ['orders.index'],
                     ]);
                 });
         });
