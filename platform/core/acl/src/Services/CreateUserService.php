@@ -19,7 +19,23 @@ class CreateUserService implements ProduceServiceInterface
     {
         $user = new User();
         $user->fill($request->input());
-        $user->email = 'default@gmail.com';
+        
+        // Generate unique email if not provided
+        $email = $request->input('email');
+        if (empty($email)) {
+            $username = $request->input('username', 'user');
+            $timestamp = time();
+            $email = $username . '_' . $timestamp . '@system.local';
+            
+            // Ensure email is unique by checking database
+            $counter = 1;
+            while (User::where('email', $email)->exists()) {
+                $email = $username . '_' . $timestamp . '_' . $counter . '@system.local';
+                $counter++;
+            }
+        }
+        
+        $user->email = $email;
         $user->password = Hash::make($request->input('password'));
         $user->save();
 
