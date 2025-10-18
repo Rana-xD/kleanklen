@@ -69,16 +69,22 @@
                 box-sizing: border-box;
             }
             
-            body {
+            html, body {
                 width: 2.9in;
                 max-width: 2.9in;
+                height: auto;
                 font-family: 'Noto Sans Khmer', 'DejaVu Sans', sans-serif;
                 font-size: 11px;
                 line-height: 1.2;
                 color: #000;
                 background: #fff;
-                padding: 4px;
+                padding: 0;
                 margin: 0;
+                overflow: visible;
+            }
+            
+            body {
+                padding: 4px;
             }
             
             .loading-message {
@@ -90,11 +96,14 @@
                 width: 100%;
                 background: white;
                 border: none;
+                page-break-after: avoid;
+                page-break-inside: avoid;
             }
             
             @page {
-                size: 2.9in auto;
+                size: 78mm 145mm;
                 margin: 0;
+                padding: 0;
             }
         }
         
@@ -291,12 +300,30 @@
                 background: #000 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                page-break-after: avoid;
+                page-break-before: avoid;
             }
             
             .notes-section {
                 background: #f0f0f0 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .header, .customer-section, .items-section, .total-section, .footer {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .items-table {
+                page-break-inside: avoid;
+            }
+            
+            .items-table tr {
+                page-break-inside: avoid;
+                page-break-after: avoid;
             }
         }
     </style>
